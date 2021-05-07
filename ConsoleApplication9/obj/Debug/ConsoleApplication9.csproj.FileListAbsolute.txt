@@ -1,0 +1,13 @@
+c:\users\administrator\documents\visual studio 2013\Projects\ConsoleApplication9\ConsoleApplication9\bin\Debug\ConsoleApplication9.exe.config
+c:\users\administrator\documents\visual studio 2013\Projects\ConsoleApplication9\ConsoleApplication9\bin\Debug\ConsoleApplication9.exe
+c:\users\administrator\documents\visual studio 2013\Projects\ConsoleApplication9\ConsoleApplication9\bin\Debug\ConsoleApplication9.pdb
+c:\users\administrator\documents\visual studio 2013\Projects\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.exe
+c:\users\administrator\documents\visual studio 2013\Projects\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.pdb
+C:\Users\Administrator\Documents\Visual Studio 2013\Projects\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.csprojResolveAssemblyReference.cache
+C:\Users\85156\Desktop\项目\ConsoleApplication9\ConsoleApplication9\ConsoleApplication9\bin\Debug\ConsoleApplication9.exe.config
+C:\Users\85156\Desktop\项目\ConsoleApplication9\ConsoleApplication9\ConsoleApplication9\bin\Debug\ConsoleApplication9.exe
+C:\Users\85156\Desktop\项目\ConsoleApplication9\ConsoleApplication9\ConsoleApplication9\bin\Debug\ConsoleApplication9.pdb
+C:\Users\85156\Desktop\项目\ConsoleApplication9\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.csproj.CoreCompileInputs.cache
+C:\Users\85156\Desktop\项目\ConsoleApplication9\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.exe
+C:\Users\85156\Desktop\项目\ConsoleApplication9\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.pdb
+C:\Users\85156\Desktop\项目\ConsoleApplication9\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.csprojAssemblyReference.cache
