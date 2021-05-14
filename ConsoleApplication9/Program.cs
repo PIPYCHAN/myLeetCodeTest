@@ -814,12 +814,180 @@ namespace ConsoleApplication9
             //var result = SumEvenAfterQueries(new int[] { 1, 2, 3, 4 },GetMatrix("[[1,0],[-3,1],[-4,0],[2,3]]"));
             //var result = MaxScore("011101");谔32
             //var result = IsAlienSorted(new string[] { "hello", "leetcode" }, "hlabcdefgijkmnopqrstuvwxyz");
-            var result = PaintingPlan(2,2);
-            var result2 = Decrypt(new int[] { 2, 4, 9, 3 },-2);
+            //var result = PaintingPlan(2,2);
+            //var result2 = Decrypt(new int[] { 2, 4, 9, 3 },-2);
+            //var result2 = SpecialArray(new int[] { 0, 4, 3, 0, 4});
+            //var result = ReformatNumber("1-23-45 6");
+            //var result = NumSpecial(GetMatrix("[[1,0,0],[0, 0, 1],[1, 0, 0]]"));
+            //var result = NumberOfDays(1992,7);
+            var result = ArrayRankTransform(new int[] {  12, 100,  5, 12 });
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
+
+        /// <summary>
+        /// 1331. 数组序号转换 https://leetcode-cn.com/problems/rank-transform-of-an-array/
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+        public static int[] ArrayRankTransform(int[] arr)
+        {
+            int[] temp = new int[arr.Length];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                temp[i] = arr[i];
+            }
+            Array.Sort(temp);
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+
+            int sameCount = 0;
+            for (int i = 0; i < temp.Length; i++)
+            {
+                if (!dic.ContainsKey(temp[i]))
+                    dic.Add(temp[i],i+1-sameCount);
+                if (i != 0 && temp[i] == temp[i - 1])
+                    sameCount++;
+            }
+         
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = dic[arr[i]] ;
+             
+            }
+            return arr;
+        }
+        /// <summary>
+        /// 1118. 一月有多少天  https://leetcode-cn.com/problems/number-of-days-in-a-month/
+        /// </summary>
+        /// <param name="Y"></param>
+        /// <param name="M"></param>
+        /// <returns></returns>
+        public static  int NumberOfDays(int Y, int M)
+        {
+            if (M == 2)
+                return Y % 4 == 0 || Y % 400 == 0 ? 28 : 29;
+            else
+                switch (M)
+                {
+                    case 1:
+                    case 3:
+                    case 5:
+                    case 7:
+                    case 8:
+                    case 10:
+                    case 12:
+                        return 31;
+                    default:
+                        return 30;
+                }
+        }
+        /// <summary>
+        /// 1582. 二进制矩阵中的特殊位置  https://leetcode-cn.com/problems/special-positions-in-a-binary-matrix/
+        /// </summary>
+        /// <param name="mat"></param>
+        /// <returns></returns>
+        public static int NumSpecial(int[][] mat)
+        {
+            int m = mat.Length, n = mat[0].Length;
+            int[] rowArr = new int[m], colArr = new int[n];
+            for (int i = 0; i < mat.Length; i++)
+            {
+                for (int j = 0; j < mat[i].Length; j++)
+                {
+                    if (mat[i][j] == 1)
+                    {
+                        rowArr[i]++;
+                        colArr[j]++;
+                    }
+                }
+            }
+            int res = 0;
+            for (int i = 0; i < mat.Length; i++)
+            {
+                for (int j = 0; j < mat[i].Length; j++)
+                {
+                    if (mat[i][j] == 1 && rowArr[i] == 1 && colArr[j] == 1)
+                        res++;
+                }
+            }
+            return res;
+                    int countRow = 0, countCol = 0;
+            for (int i = 0; i < rowArr.Length; i++)
+            {
+                if (rowArr[i]==1)
+                    countRow++;
+            }
+            for (int i = 0; i < colArr.Length; i++)
+            {
+                if (colArr[i] == 1)
+                    countCol++;
+            }
+            return countCol * countRow;
+
+        }
+        /// <summary>
+        /// 1694. 重新格式化电话号码 https://leetcode-cn.com/problems/reformat-phone-number/
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static string ReformatNumber(string number)
+        {
+            string temp = "", res = "";
+            for (int i = 0; i < number.Length; i++)
+            {
+                if (number[i]>='0'&&number[i]<='9')
+                {
+                    temp += number[i];
+                }
+            }
+            int count = 0;
+            for (int i = 0; i < temp.Length; i++)
+            {
+                if (count % 3==0&&count!=0)
+                {
+                    res += "-";
+                }
+                res += temp[i];
+                count++;
+            }
+            if ((count-4)%3==0)
+            {
+                char[] tempArr = res.ToCharArray();
+                char c = tempArr[res.Length - 2];
+                tempArr[res.Length - 2] = tempArr[res.Length - 3];
+                tempArr[res.Length - 3] = c;
+                res = new String(tempArr);
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 1608. 特殊数组的特征值 https://leetcode-cn.com/problems/special-array-with-x-elements-greater-than-or-equal-x/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int SpecialArray(int[] nums)
+        {
+            Array.Sort(nums);
+            if (nums.Length <= nums[0]) return nums.Length;
+            int x = nums.Length - 1;
+            int i = 1;
+            while (x > 0)
+            {
+                if (x <= nums[i] && x > nums[i - 1])
+                {
+                    return x;
+                }
+                else
+                {
+                    x--;
+                    i++;
+                }
+            }
+            return -1;
+        }
+
         /// <summary>
         /// 1652. 拆炸弹 https://leetcode-cn.com/problems/defuse-the-bomb/
         /// </summary>
