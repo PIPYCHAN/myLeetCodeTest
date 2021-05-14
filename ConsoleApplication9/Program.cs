@@ -833,6 +833,7 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static int[] ArrayRankTransform(int[] arr)
         {
+            //还可以复制一个数组排序后，循环对比二分查找
             int[] temp = new int[arr.Length];
             for (int i = 0; i < arr.Length; i++)
             {
