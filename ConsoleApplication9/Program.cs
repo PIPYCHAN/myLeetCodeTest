@@ -37,6 +37,25 @@ namespace ConsoleApplication9
         static void Main(string[] args)
         {
             #region old
+            //var result = LongestPalindrome2("cbbd");
+            //var result = Reformat("leetcode12345678");
+            //var result = ReplaceDigits("a1c1e1");
+            //var result = SumEvenAfterQueries(new int[] { 1, 2, 3, 4 },GetMatrix("[[1,0],[-3,1],[-4,0],[2,3]]"));
+            //var result = MaxScore("011101");谔32
+            //var result = IsAlienSorted(new string[] { "hello", "leetcode" }, "hlabcdefgijkmnopqrstuvwxyz");
+            //var result = PaintingPlan(2,2);
+            //var result2 = Decrypt(new int[] { 2, 4, 9, 3 },-2);
+            //var result2 = SpecialArray(new int[] { 0, 4, 3, 0, 4});
+            //var result = ReformatNumber("1-23-45 6");
+            //var result = NumSpecial(GetMatrix("[[1,0,0],[0, 0, 1],[1, 0, 0]]"));
+            //var result = NumberOfDays(1992,7);
+            //var result = ArrayRankTransform(new int[] {  12, 100,  5, 12 });
+            //var result = MissingNumber(new int[] { 0, 1, 2, 4, 5, 6, 7,8, 9 });
+            //var result = MaximumPopulation(GetMatrix(" [[1993,1999],[2000,2010]]"));
+            //var result = SortSentence("sentence4 a3 is2 This1");
+            //var result = SumBase(34,6);
+            //var result = LengthOfLongestSubstring("YazaAay");
+            //var result = CanAttendMeetings(GetMatrix("[[0,30],[5,10],[15,20]]"));
             //var result = DistanceBetweenBusStops(new int[] {1,2,3,4 },3,1);
             //var result = BinaryGap(22);
             //var result = CheckIfExist(new int[] { 10, 2, 5, 3 });//   l<r少等号(new int[] { 10, 2, 5, 3 });
@@ -807,25 +826,268 @@ namespace ConsoleApplication9
 
             #endregion
 
+            var result = CheckZeroOnes("111000");
+            
 
-            //var result = LongestPalindrome2("cbbd");
-            //var result = Reformat("leetcode12345678");
-            //var result = ReplaceDigits("a1c1e1");
-            //var result = SumEvenAfterQueries(new int[] { 1, 2, 3, 4 },GetMatrix("[[1,0],[-3,1],[-4,0],[2,3]]"));
-            //var result = MaxScore("011101");谔32
-            //var result = IsAlienSorted(new string[] { "hello", "leetcode" }, "hlabcdefgijkmnopqrstuvwxyz");
-            //var result = PaintingPlan(2,2);
-            //var result2 = Decrypt(new int[] { 2, 4, 9, 3 },-2);
-            //var result2 = SpecialArray(new int[] { 0, 4, 3, 0, 4});
-            //var result = ReformatNumber("1-23-45 6");
-            //var result = NumSpecial(GetMatrix("[[1,0,0],[0, 0, 1],[1, 0, 0]]"));
-            //var result = NumberOfDays(1992,7);
-            var result = ArrayRankTransform(new int[] {  12, 100,  5, 12 });
+
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// 1869. 哪种连续子字符串更长 https://leetcode-cn.com/problems/longer-contiguous-segments-of-ones-than-zeros/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static  bool CheckZeroOnes(string s)
+        {
+            char pre = s[0], curr = '0';
+            int maxOne = s[0] == '1' ? 1 : 0, maxZero = s[0] == '0' ? 1 : 0, currLen = 1;
+            for (int i = 1; i < s.Length; i++)
+            {
+                curr = s[i];
+                if (curr==pre)
+                {
+                    currLen++;
+                }
+                else
+                {
+                    if (pre == '1')
+                    {
+                        maxOne = Math.Max(currLen,maxOne);
+                    }
+                    else
+                    {
+                        maxZero = Math.Max(currLen,maxZero);
+                    }
+                    currLen = 1;
+                }
+                pre = curr;
+            }
+            if (s[s.Length-1]=='0')
+            {
+                maxZero = Math.Max(maxZero,currLen);
+            }
+            else
+            {
+                maxOne = Math.Max(maxOne,currLen);
+            }
+            return maxOne > maxZero;
+        }
+
+        /// <summary>
+        ///252. 会议室https://leetcode-cn.com/problems/meeting-rooms/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static bool CanAttendMeetings(int[][] intervals)
+        {
+            Array.Sort(intervals, (x, y) => { return x[0].CompareTo(y[0]); });
+
+            for (int i = 1; i < intervals.Length; i++)
+            {
+                if (intervals[i-1][1]>intervals[i][0])
+                {
+                    return false;
+                }
+            }
+            return true;
+            #region BruteForce
+
+            //int[] arr = new int[1000001];
+            //for (int i = 0; i < intervals.Length; i++)
+            //{
+            //    for (int j = intervals[i][0]; j < intervals[i][1]; j++)
+            //    {
+            //        if (arr[j]==1)
+            //        {
+            //            return false;
+            //        }
+            //        arr[j]++;
+            //    }
+            //}
+            //return true;
+
+            #endregion
+        }
+
+        /// <summary>
+        /// 1837. K 进制表示下的各位数字总和 https://leetcode-cn.com/problems/sum-of-digits-in-base-k/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static int SumBase(int n, int k)
+        {
+            int res = 0;
+            while (n>0)
+            {
+                res += n % k;
+                n /= k;
+            }
+            return res;
+
+        }
+        /// <summary>
+        /// 1859. 将句子排序 https://leetcode-cn.com/problems/sorting-the-sentence/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string SortSentence(string s)
+        {
+            string[] strArr = s.Split(),sortedArr=new string[10];
+            int n = strArr.Length,m=strArr[0].Length;
+            string strRes = "";
+            for (int i = 0; i < n; i++)
+            {
+                m = strArr[i].Length;
+                sortedArr[strArr[i][m-1] - '0'] = strArr[i].Substring(0, m - 1);
+            }
+            for (int i = 0; i < sortedArr.Length; i++)
+            {
+                strRes += sortedArr[i] + " ";
+            }
+            return strRes.Trim();
+            #region array
+
+
+            #endregion
+
+            #region dic
+
+
+            //Dictionary<int, string> dic = new Dictionary<int, string>();
+            //foreach (var curr in strArr)
+            //{
+            //    dic.Add(int.Parse(curr.Substring(curr.Length-1,1)),curr.Substring(0,curr.Length-1));
+            //}
+            ////dic=dic.OrderBy(i=>i.Key).ToDictionary(x=>x.Key,x=>x.Value);
+            ////var sortDic = from curr in dic orderby curr.Key ascending select curr;
+            ////dic = sortDic.ToDictionary(x=>x.Key,x=>x.Value);
+
+            ////foreach (var key in dic.Keys)
+            ////{
+            ////    strRes += dic[key] + " ";
+            ////}
+            //for (int i = 0; i < strArr.Length; i++)
+            //{
+            //    strRes += dic[i + 1] + " ";
+            //}
+            //return strRes.TrimEnd();
+            #endregion
+
+
+
+        }
+
+        /// <summary>
+        /// 1854. 人口最多的年份 https://leetcode-cn.com/problems/maximum-population-year/
+        /// </summary>
+        /// <param name="logs"></param>
+        /// <returns></returns>
+        public static int MaximumPopulation(int[][] logs)
+        {
+            ///差分
+            int[] d = new int[101];
+            for (int i=0;i< logs.Length;i++)
+            {
+                d[logs[i][0] - 1950] += 1;  
+                d[logs[i][1] - 1950] -= 1;  
+            }
+            int curr = 0, resYear = 0, max = 0;
+            for (int i = 0; i <= 100; i++)
+            {
+                curr += d[i];      
+                if (curr > max)
+                {
+                    max = curr;
+                    resYear = i;
+                }
+            }
+            return resYear + 1950;
+            ///双循环暴力
+            //int[] yearArr = new int[101];
+            //int max = 0, resYear = 2050;
+            //for (int i = 0; i < logs.Length; i++)
+            //{
+            //    for (int j = logs[i][0]-1950; j < logs[i][1]-1950; j++)
+            //    {
+            //        yearArr[j]++;
+            //        if (yearArr[j] > max||(yearArr[j]==max&&resYear>1950+j))
+            //        {
+            //            max = yearArr[j];
+            //            resYear = 1950 + j;
+            //        }
+            //    }
+            //}
+            //return resYear;
+        }
+        /// <summary>
+        /// 1228. 等差数列中缺失的数字 https://leetcode-cn.com/problems/missing-number-in-arithmetic-progression/
+        /// </summary>
+        public static  int MissingNumber4(int[] arr)
+        {
+            #region BinarySearch
+            int diff=(arr[arr.Length-1]-arr[0])/arr.Length, 
+                left = 0, right = arr.Length-1, middle = left + (right - left) / 2;
+            while (left<right-1)
+            {
+                middle = left + (right - left) / 2;
+                if (arr[middle]-arr[left]==diff*(middle-left))
+                {
+                     left = middle ;
+                }
+                else
+                {
+                    right = middle ;
+                }
+            }
+            return (arr[left]+arr[right])/2;
+
+                
+            #endregion
+            #region Math
+            //int currSum = 0;
+            //for (int i = 0; i < arr.Length; i++)
+            //{
+            //    currSum += arr[i];
+            //}
+            //return (arr[arr.Length - 1] + arr[0]) * (arr.Length+1) / 2-currSum;
+
+            #endregion
+
+            #region BruteForce
+
+
+            //Dictionary<int, int> dic = new Dictionary<int, int>();
+            //for (int i = 1; i < arr.Length; i++)
+            //{
+            //    int curr = arr[i] - arr[i - 1];
+            //    if (!dic.ContainsKey(curr))
+            //        dic.Add(curr, 1);
+            //    else
+            //        dic[curr]++;
+            //}
+            //int target = 0;
+            //foreach (var key in dic.Keys)
+            //{
+            //    if (dic[key] == 1)
+            //    {
+            //        target = key;
+            //        break;
+            //    }
+            //}
+            //for (int i = 1; i < arr.Length; i++)
+            //{
+            //    if (arr[i]-arr[i-1]==target)
+            //    {
+            //        return arr[i] - target / 2;
+            //    }
+            //}
+            //return -1;
+            #endregion
+        }
         /// <summary>
         /// 1331. 数组序号转换 https://leetcode-cn.com/problems/rank-transform-of-an-array/
         /// </summary>
@@ -12390,8 +12652,6 @@ namespace ConsoleApplication9
         }
         public static int MissingNumber3(int[] nums)
         {
-
-
             int total = 0, totalN = 0;
             for (int i = 0; i < nums.Length; i++)
             {
@@ -15926,6 +16186,11 @@ namespace ConsoleApplication9
             #endregion
 
         }
+        /// <summary>
+        /// 剑指 Offer 53 - II. 0～n-1中缺失的数字 https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
         public static int MissingNumber(int[] nums)
         {
             if (nums == null || nums.Length == 0) return 0;
@@ -18199,6 +18464,107 @@ namespace ConsoleApplication9
     }
 
 
+    public class MinStack
+    {
+        Stack<int> stMain, stAssist;
+        /** initialize your data structure here. */
+        public MinStack()
+        {
+            stMain = new Stack<int>();
+            stAssist = new Stack<int>();
+        }
+
+        public void Push(int x)
+        {
+            stMain.Push(x);
+            if (stAssist.Count==0||stAssist.Peek()>=x)
+            {
+                stAssist.Push(x);
+            }
+        }
+
+        public void Pop()
+        {
+            
+            int p=stMain.Pop();
+            if (stAssist.Peek() == p)
+            {
+                stAssist.Pop();
+            }
+        }
+
+        public int Top()
+        {
+           return stMain.Peek();
+        }
+
+        public int GetMin()
+        {
+            return stAssist.Peek();
+        }
+    }
+    public class MyHashSet
+    {
+        private int[] arr;
+        /** Initialize your data structure here. */
+        public MyHashSet()
+        {
+            arr = new int[1000001];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = -1;
+            }
+        }
+
+        public void Add(int key)
+        {
+            arr[key] = 1;
+        }
+
+        public void Remove(int key)
+        {
+            arr[key] = -1;
+        }
+
+        /** Returns true if this set contains the specified element */
+        public bool Contains(int key)
+        {
+            return arr[key] == 1;
+        }
+    }
+
+    public class MyHashMap
+    {
+        private int[] arr;
+
+        /** Initialize your data structure here. */
+        public MyHashMap()
+        {
+            arr = new int[1000001];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = -1;
+            }
+        }
+
+        /** value will always be non-negative. */
+        public void Put(int key, int value)
+        {
+                arr[key] = value;
+        }
+
+        /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+        public int Get(int key)
+        {
+            return arr[key];
+        }
+
+        /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+        public void Remove(int key)
+        {
+            arr[key] = -1;
+        }
+    }
 
     public class Foo
     {
