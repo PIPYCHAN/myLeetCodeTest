@@ -826,7 +826,10 @@ namespace ConsoleApplication9
 
             #endregion
 
-            var result = CheckZeroOnes("111000");
+            //var result = CheckZeroOnes("111000");
+            //var result = IsOneBitCharacter(new int[] { 1,0,1,0});
+            //var result = ConvertToBase7(0);
+            var result = CountBits(2);
             
 
 
@@ -834,7 +837,96 @@ namespace ConsoleApplication9
             Console.WriteLine("end");
             Console.ReadKey();
         }
+        /// <summary>
+        /// 338. 比特位计数 https://leetcode-cn.com/problems/counting-bits/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int[] CountBits(int n)
+        {
+            int[] res = new int[n + 1];
+            for (int i = 0; i <= n; i++)
+            {
+                res[i]= CountBits_Each(i);
+            }
+            return res;
+        }
+        public static int CountBits_Each(int n)
+        {
+            int count = 0;
+            while (n>0)
+            {
+                count += n & 1;
+                count >>= 1;
+            }
+            return count;
+        }
+        /// <summary>
+        /// 504. 七进制数 https://leetcode-cn.com/problems/base-7/
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string ConvertToBase7(int num)
+        {
+            string res = "";
+            bool isNegative = false;
+            if (num<0)
+            {
+                isNegative = true;
+                num = Math.Abs(num);
+            }
+            while (num>0)
+            {
+                res += num % 7;
+                num /= 7;
+            }
+            return new String((isNegative?(res+"-"):(res)).Reverse().ToArray());
+        }
 
+        /// <summary>
+        /// 面试题 16.15. 珠玑妙算 https://leetcode-cn.com/problems/master-mind-lcci/
+        /// </summary>
+        /// <param name="solution"></param>
+        /// <param name="guess"></param>
+        /// <returns></returns>
+        public static int[] MasterMind(string solution, string guess)
+        {
+            int real = 0, fake = 0;
+            int[] arr = new int[26];
+            for (int i = 0; i < solution.Length; i++)
+            {
+                if (solution[i] == guess[i])
+                {
+                    real++;
+                }
+                else
+                {
+                    if (arr[solution[i] - 'A'] < 0)
+                        fake++;
+                    arr[solution[i] - 'A']++;
+
+                    if (arr[guess[i] - 'A'] > 0)
+                        fake++;
+                    arr[guess[i] - 'A']--;
+
+                }
+            }
+            return new int[] { real, fake };
+        }
+        /// <summary>
+        /// 717. 1比特与2比特字符 https://leetcode-cn.com/problems/1-bit-and-2-bit-characters/
+        /// </summary>
+        /// <param name="bits"></param>
+        /// <returns></returns>
+        public static  bool IsOneBitCharacter(int[] bits)
+        {
+            int i = 0;
+            for (; i < bits.Length-1; i++)
+            {
+                i += bits[i] == 1 ? 1 : 0;
+            }
+            return i == bits.Length-1;
+        }
         /// <summary>
         /// 1869. 哪种连续子字符串更长 https://leetcode-cn.com/problems/longer-contiguous-segments-of-ones-than-zeros/
         /// </summary>
@@ -18463,7 +18555,59 @@ namespace ConsoleApplication9
         }
     }
 
+    /// <summary>
+    ///面试题 03.04. 化栈为队  https://leetcode-cn.com/problems/implement-queue-using-stacks-lcci/
+    /// </summary>
+    public class MyQueue
+    {
+        Stack<int> stPush, stPop;
+        /** Initialize your data structure here. */
+        public MyQueue()
+        {
+            stPop = new Stack<int>();
+            stPush = new Stack<int>();
 
+        }
+
+        /** Push element x to the back of queue. */
+        public void Push(int x)
+        {
+            stPush.Push(x);
+        }
+
+        /** Removes the element from in front of queue and returns that element. */
+        public int Pop()
+        {
+            if (stPop.Count==0)
+            {
+                while (stPush.Count>0)
+                {
+                    stPop.Push(stPush.Pop());
+                }
+            }
+            return stPop.Pop();
+
+        }
+
+        /** Get the front element. */
+        public int Peek()
+        {
+            if (stPop.Count == 0)
+            {
+                while (stPush.Count > 0)
+                {
+                    stPop.Push(stPush.Pop());
+                }
+            }
+            return stPop.Peek();
+        }
+
+        /** Returns whether the queue is empty. */
+        public bool Empty()
+        {
+            return stPop.Count == 0 && stPush.Count == 0;
+        }
+    }
     public class MinStack
     {
         Stack<int> stMain, stAssist;
