@@ -31,7 +31,7 @@ namespace ConsoleApplication9
     #endregion
 
     class Program
-    {  
+    {
         private static IList<int> lisTree = new List<int>();
         private static Stack<int> stForTree = new Stack<int>();
         static void Main(string[] args)
@@ -829,14 +829,157 @@ namespace ConsoleApplication9
             //var result = CheckZeroOnes("111000");
             //var result = IsOneBitCharacter(new int[] { 1,0,1,0});
             //var result = ConvertToBase7(0);
-            var result = CountBits(2);
-            
-
-
+            //var result = CountBits(10);
+            //var result = MaxRepeating("ababc","ab");
+            //var result = HeightChecker(new int[] { 5, 1, 2, 3, 4 });
+            //var result = FindPoisonedDuration(new int[] { 1},1000000);
+            var result = ReorderSpaces("  a");
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
+        /// <summary>
+        /// 1592. 重新排列单词间的空格 https://leetcode-cn.com/problems/rearrange-spaces-between-words/
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static  string ReorderSpaces(string text)
+        {
+            int spaceCount = 0;
+            List<string> lisStr = new List<string>();
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] != ' ')
+                {
+                    string currStr = "";
+                    while (i<text.Length&&text[i] != ' ')
+                    {
+                        currStr += text[i++];
+                    }
+                    lisStr.Add(currStr);
+                    i--;
+                }
+                else
+                {
+                    spaceCount++;
+                }
+            }
+            int newWidth = lisStr.Count == 1 ? spaceCount : spaceCount / (lisStr.Count - 1);
+            string strNewSpace = "";
+            while (newWidth>0)
+            {
+                strNewSpace += " ";
+                newWidth--;
+            }
+            int endWidth= lisStr.Count == 1 ? spaceCount : spaceCount %(lisStr.Count - 1);
+            string strEndSpace = "";
+            while (endWidth > 0)
+            {
+                strEndSpace += " ";
+                endWidth--;
+            }
+
+            string strRes = "";
+            for (int i = 0; i < lisStr.Count-1; i++)
+            {
+                strRes += lisStr[i] + strNewSpace;
+            }
+
+
+            strRes += lisStr[lisStr.Count - 1] + strEndSpace;
+
+            return strRes;
+
+
+
+        }
+        /// <summary>
+        /// 495. 提莫攻击 https://leetcode-cn.com/problems/teemo-attacking/
+        /// </summary>
+        /// <param name="timeSeries"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
+        public static int FindPoisonedDuration(int[] timeSeries, int duration)
+        {
+            int last = 0;
+            for (int i = 0; i < timeSeries.Length-1; i++)
+            {
+                if (timeSeries[i]+duration>timeSeries[i+1])
+                {
+                    last += timeSeries[i + 1] - timeSeries[i];
+                }
+                else
+                {
+                    last += duration;
+                }
+            }
+            
+            
+            return last+duration;
+        }
+
+        /// <summary>
+        /// 1051. 高度检查器 https://leetcode-cn.com/problems/height-checker/
+        /// </summary>
+        /// <param name="heights"></param>
+        /// <returns></returns>
+        public static int HeightChecker(int[] heights)
+        {
+            #region BucketSort
+            int count = 0;
+            int[] arr = new int[101];
+            for (int i = 0; i < heights.Length; i++)
+            {
+                arr[heights[i]]++;
+            }
+            for (int i = 0,j=0; i < arr.Length; i++)
+            {
+                while (arr[i]>0)
+                {
+                    if (i!=heights[j])
+                    {
+                        count++;
+                    }
+                    j++;
+                    arr[i]--;
+                }
+            }
+            return count;
+
+            #endregion
+
+            #region BruteForce
+            //int count = 0;
+            //int[] newArr =new int[heights.Length];
+            //for (int i = 0; i < heights.Length; i++)
+            //{
+            //    newArr[i] = heights[i];
+            //}
+            //Array.Sort(newArr,(a,b)=> { return a.CompareTo(b); });
+            //for (int i = 0; i < heights.Length; i++)
+            //{
+            //    count += heights[i] != newArr[i] ? 1 : 0;
+            //}
+            //return count;
+            #endregion
+        }
+        /// <summary>
+        /// 1668. 最大重复子字符串  https://leetcode-cn.com/problems/maximum-repeating-substring/
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static int MaxRepeating(string sequence, string word)
+        {
+            int count = 0;
+            string strNew = word;
+            while (sequence.Contains(strNew))
+            {
+                count++;
+                strNew += word;
+            }
+            return count;
+        }
+
         /// <summary>
         /// 338. 比特位计数 https://leetcode-cn.com/problems/counting-bits/
         /// </summary>
@@ -844,20 +987,42 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static int[] CountBits(int n)
         {
+
+            #region DP
             int[] res = new int[n + 1];
-            for (int i = 0; i <= n; i++)
+            res[0] = 0;
+            for (int i = 1; i <= n; i++)
             {
-                res[i]= CountBits_Each(i);
+                if (i%2==0)
+                {
+                    res[i] = res[i/2];
+                }
+                else
+                {
+                    res[i] = res[i - 1] + 1;
+                }
             }
             return res;
+
+            #endregion
+
+            #region Force
+
+            //int[] res = new int[n + 1];
+            //for (int i = 0; i <= n; i++)
+            //{
+            //    res[i]= CountBits_Each(i);
+            //}
+            //return res;
+            #endregion
         }
         public static int CountBits_Each(int n)
         {
             int count = 0;
-            while (n>0)
+            while (n > 0)
             {
                 count += n & 1;
-                count >>= 1;
+                n >>= 1;
             }
             return count;
         }
@@ -870,17 +1035,17 @@ namespace ConsoleApplication9
         {
             string res = "";
             bool isNegative = false;
-            if (num<0)
+            if (num < 0)
             {
                 isNegative = true;
                 num = Math.Abs(num);
             }
-            while (num>0)
+            while (num > 0)
             {
                 res += num % 7;
                 num /= 7;
             }
-            return new String((isNegative?(res+"-"):(res)).Reverse().ToArray());
+            return new String((isNegative ? (res + "-") : (res)).Reverse().ToArray());
         }
 
         /// <summary>
@@ -918,28 +1083,28 @@ namespace ConsoleApplication9
         /// </summary>
         /// <param name="bits"></param>
         /// <returns></returns>
-        public static  bool IsOneBitCharacter(int[] bits)
+        public static bool IsOneBitCharacter(int[] bits)
         {
             int i = 0;
-            for (; i < bits.Length-1; i++)
+            for (; i < bits.Length - 1; i++)
             {
                 i += bits[i] == 1 ? 1 : 0;
             }
-            return i == bits.Length-1;
+            return i == bits.Length - 1;
         }
         /// <summary>
         /// 1869. 哪种连续子字符串更长 https://leetcode-cn.com/problems/longer-contiguous-segments-of-ones-than-zeros/
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static  bool CheckZeroOnes(string s)
+        public static bool CheckZeroOnes(string s)
         {
             char pre = s[0], curr = '0';
             int maxOne = s[0] == '1' ? 1 : 0, maxZero = s[0] == '0' ? 1 : 0, currLen = 1;
             for (int i = 1; i < s.Length; i++)
             {
                 curr = s[i];
-                if (curr==pre)
+                if (curr == pre)
                 {
                     currLen++;
                 }
@@ -947,23 +1112,23 @@ namespace ConsoleApplication9
                 {
                     if (pre == '1')
                     {
-                        maxOne = Math.Max(currLen,maxOne);
+                        maxOne = Math.Max(currLen, maxOne);
                     }
                     else
                     {
-                        maxZero = Math.Max(currLen,maxZero);
+                        maxZero = Math.Max(currLen, maxZero);
                     }
                     currLen = 1;
                 }
                 pre = curr;
             }
-            if (s[s.Length-1]=='0')
+            if (s[s.Length - 1] == '0')
             {
-                maxZero = Math.Max(maxZero,currLen);
+                maxZero = Math.Max(maxZero, currLen);
             }
             else
             {
-                maxOne = Math.Max(maxOne,currLen);
+                maxOne = Math.Max(maxOne, currLen);
             }
             return maxOne > maxZero;
         }
@@ -979,7 +1144,7 @@ namespace ConsoleApplication9
 
             for (int i = 1; i < intervals.Length; i++)
             {
-                if (intervals[i-1][1]>intervals[i][0])
+                if (intervals[i - 1][1] > intervals[i][0])
                 {
                     return false;
                 }
@@ -1013,7 +1178,7 @@ namespace ConsoleApplication9
         public static int SumBase(int n, int k)
         {
             int res = 0;
-            while (n>0)
+            while (n > 0)
             {
                 res += n % k;
                 n /= k;
@@ -1028,13 +1193,13 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static string SortSentence(string s)
         {
-            string[] strArr = s.Split(),sortedArr=new string[10];
-            int n = strArr.Length,m=strArr[0].Length;
+            string[] strArr = s.Split(), sortedArr = new string[10];
+            int n = strArr.Length, m = strArr[0].Length;
             string strRes = "";
             for (int i = 0; i < n; i++)
             {
                 m = strArr[i].Length;
-                sortedArr[strArr[i][m-1] - '0'] = strArr[i].Substring(0, m - 1);
+                sortedArr[strArr[i][m - 1] - '0'] = strArr[i].Substring(0, m - 1);
             }
             for (int i = 0; i < sortedArr.Length; i++)
             {
@@ -1082,15 +1247,15 @@ namespace ConsoleApplication9
         {
             ///差分
             int[] d = new int[101];
-            for (int i=0;i< logs.Length;i++)
+            for (int i = 0; i < logs.Length; i++)
             {
-                d[logs[i][0] - 1950] += 1;  
-                d[logs[i][1] - 1950] -= 1;  
+                d[logs[i][0] - 1950] += 1;
+                d[logs[i][1] - 1950] -= 1;
             }
             int curr = 0, resYear = 0, max = 0;
             for (int i = 0; i <= 100; i++)
             {
-                curr += d[i];      
+                curr += d[i];
                 if (curr > max)
                 {
                     max = curr;
@@ -1118,26 +1283,26 @@ namespace ConsoleApplication9
         /// <summary>
         /// 1228. 等差数列中缺失的数字 https://leetcode-cn.com/problems/missing-number-in-arithmetic-progression/
         /// </summary>
-        public static  int MissingNumber4(int[] arr)
+        public static int MissingNumber4(int[] arr)
         {
             #region BinarySearch
-            int diff=(arr[arr.Length-1]-arr[0])/arr.Length, 
-                left = 0, right = arr.Length-1, middle = left + (right - left) / 2;
-            while (left<right-1)
+            int diff = (arr[arr.Length - 1] - arr[0]) / arr.Length,
+                left = 0, right = arr.Length - 1, middle = left + (right - left) / 2;
+            while (left < right - 1)
             {
                 middle = left + (right - left) / 2;
-                if (arr[middle]-arr[left]==diff*(middle-left))
+                if (arr[middle] - arr[left] == diff * (middle - left))
                 {
-                     left = middle ;
+                    left = middle;
                 }
                 else
                 {
-                    right = middle ;
+                    right = middle;
                 }
             }
-            return (arr[left]+arr[right])/2;
+            return (arr[left] + arr[right]) / 2;
 
-                
+
             #endregion
             #region Math
             //int currSum = 0;
@@ -1200,15 +1365,15 @@ namespace ConsoleApplication9
             for (int i = 0; i < temp.Length; i++)
             {
                 if (!dic.ContainsKey(temp[i]))
-                    dic.Add(temp[i],i+1-sameCount);
+                    dic.Add(temp[i], i + 1 - sameCount);
                 if (i != 0 && temp[i] == temp[i - 1])
                     sameCount++;
             }
-         
+
             for (int i = 0; i < arr.Length; i++)
             {
-                arr[i] = dic[arr[i]] ;
-             
+                arr[i] = dic[arr[i]];
+
             }
             return arr;
         }
@@ -1218,7 +1383,7 @@ namespace ConsoleApplication9
         /// <param name="Y"></param>
         /// <param name="M"></param>
         /// <returns></returns>
-        public static  int NumberOfDays(int Y, int M)
+        public static int NumberOfDays(int Y, int M)
         {
             if (M == 2)
                 return Y % 4 == 0 || Y % 400 == 0 ? 28 : 29;
@@ -1267,10 +1432,10 @@ namespace ConsoleApplication9
                 }
             }
             return res;
-                    int countRow = 0, countCol = 0;
+            int countRow = 0, countCol = 0;
             for (int i = 0; i < rowArr.Length; i++)
             {
-                if (rowArr[i]==1)
+                if (rowArr[i] == 1)
                     countRow++;
             }
             for (int i = 0; i < colArr.Length; i++)
@@ -1291,7 +1456,7 @@ namespace ConsoleApplication9
             string temp = "", res = "";
             for (int i = 0; i < number.Length; i++)
             {
-                if (number[i]>='0'&&number[i]<='9')
+                if (number[i] >= '0' && number[i] <= '9')
                 {
                     temp += number[i];
                 }
@@ -1299,14 +1464,14 @@ namespace ConsoleApplication9
             int count = 0;
             for (int i = 0; i < temp.Length; i++)
             {
-                if (count % 3==0&&count!=0)
+                if (count % 3 == 0 && count != 0)
                 {
                     res += "-";
                 }
                 res += temp[i];
                 count++;
             }
-            if ((count-4)%3==0)
+            if ((count - 4) % 3 == 0)
             {
                 char[] tempArr = res.ToCharArray();
                 char c = tempArr[res.Length - 2];
@@ -1353,25 +1518,25 @@ namespace ConsoleApplication9
         {
             int n = code.Length;
             int[] res = new int[n];
-            
-            if (k>0)
+
+            if (k > 0)
             {
                 for (int i = 0; i < res.Length; i++)
                 {
-                    int curr = i+1;
-                    while (curr<=i+k)
+                    int curr = i + 1;
+                    while (curr <= i + k)
                     {
-                        res[i]+= code[curr%n];
+                        res[i] += code[curr % n];
                         curr++;
                     }
                 }
             }
-            else if (k<0)
+            else if (k < 0)
             {
                 for (int i = 0; i < res.Length; i++)
                 {
-                    int curr = (n-1 + i),count=-k;
-                    while (curr >=0&&count>0)
+                    int curr = (n - 1 + i), count = -k;
+                    while (curr >= 0 && count > 0)
                     {
 
                         res[i] += code[curr % n];
@@ -1411,13 +1576,13 @@ namespace ConsoleApplication9
             for (int i = 1; i < words.Length; i++)
             {
                 int index = 0;
-                while (index<words[i].Length&&index<words[i-1].Length)
+                while (index < words[i].Length && index < words[i - 1].Length)
                 {
-                    if (orderIndex[ words[i][index]-'a'] > orderIndex[words[i-1][index] - 'a'])
+                    if (orderIndex[words[i][index] - 'a'] > orderIndex[words[i - 1][index] - 'a'])
                     {
                         break;
                     }
-                    else if(orderIndex[words[i][index] - 'a'] == orderIndex[words[i - 1][index] - 'a'])
+                    else if (orderIndex[words[i][index] - 'a'] == orderIndex[words[i - 1][index] - 'a'])
                     {
                         index++;
                     }
@@ -1426,7 +1591,7 @@ namespace ConsoleApplication9
                         return false;
                     }
                 }
-                if (index<words[i-1].Length&&index==words[i].Length)
+                if (index < words[i - 1].Length && index == words[i].Length)
                 {
                     return false;
                 }
@@ -1439,21 +1604,21 @@ namespace ConsoleApplication9
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public  static int MaxScore(string s)
+        public static int MaxScore(string s)
         {
-            int max = 0,left=0,right=0;
+            int max = 0, left = 0, right = 0;
             for (int i = 1; i < s.Length; i++)
             {
                 if (s[i] == '1')
                     right++;
             }
-            left= s[0] == '0' ? 1 : 0;
+            left = s[0] == '0' ? 1 : 0;
             max = left + right;
             for (int i = 2; i < s.Length; i++)
             {
                 left += s[i - 1] == '0' ? 1 : 0;
                 right -= s[i - 1] == '1' ? 1 : 0;
-                max = Math.Max(left+right,max);
+                max = Math.Max(left + right, max);
             }
             return max;
 
@@ -1477,7 +1642,7 @@ namespace ConsoleApplication9
             }
             for (int i = 0; i < queries.Length; i++)
             {
-                if (A[queries[i][1]]%2==0)
+                if (A[queries[i][1]] % 2 == 0)
                 {
                     int temp = A[queries[i][1]];
                     A[queries[i][1]] += queries[i][0];
@@ -1494,13 +1659,13 @@ namespace ConsoleApplication9
                 else
                 {
                     A[queries[i][1]] += queries[i][0];
-                    if (A[queries[i][1]]%2==0)
+                    if (A[queries[i][1]] % 2 == 0)
                     {
                         currOddSum += A[queries[i][1]];
                     }
                 }
                 res[i] = currOddSum;
-            
+
             }
             return res;
         }
@@ -1514,8 +1679,8 @@ namespace ConsoleApplication9
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < s.Length; i++)
             {
-                if (s[i]<='9')
-                    sb.Append((char)(s[i-1]+s[i]-'0'));
+                if (s[i] <= '9')
+                    sb.Append((char)(s[i - 1] + s[i] - '0'));
                 else
                     sb.Append((char)s[i]);
             }
@@ -1536,12 +1701,12 @@ namespace ConsoleApplication9
                 else
                     countChar++;
             }
-            if (Math.Abs(countChar-countNum)>1)
+            if (Math.Abs(countChar - countNum) > 1)
                 return "";
 
             char[] arr = new char[countChar + countNum];
 
-            if (countChar>countNum) { countChar = 0; countNum = 1; }
+            if (countChar > countNum) { countChar = 0; countNum = 1; }
             else { countChar = 1; countNum = 0; }
 
             for (int i = 0; i < s.Length; i++)
@@ -1597,7 +1762,7 @@ namespace ConsoleApplication9
             //            sb.Append(lisChar[index]);
             //        }
             //    }
- 
+
             //    index++;
             //}
             //return sb.ToString();
@@ -1629,7 +1794,7 @@ namespace ConsoleApplication9
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static  string LongestPalindrome2(string s)
+        public static string LongestPalindrome2(string s)
         {
             #region SpreadFromCenter
             if (string.IsNullOrEmpty(s))
@@ -1708,8 +1873,8 @@ namespace ConsoleApplication9
         {
             for (int i = 0; i < ops.Length; i++)
             {
-                m = Math.Min(ops[i][0],m);
-                n = Math.Min(ops[i][1],n);
+                m = Math.Min(ops[i][0], m);
+                n = Math.Min(ops[i][1], n);
             }
             return m * n;
         }
@@ -1741,11 +1906,11 @@ namespace ConsoleApplication9
                         x--;
                         break;
                 }
-                if (set.Contains(x*10000+y))
+                if (set.Contains(x * 10000 + y))
                 {
                     return true;
                 }
-                set.Add(x*10000+y);
+                set.Add(x * 10000 + y);
             }
             return false;
         }
@@ -1757,10 +1922,10 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static int[] NumberOfLines(int[] widths, string s)
         {
-            int line = 0,currIndex=0;
+            int line = 0, currIndex = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                if (currIndex+ widths[s[i] - 'a']>100)
+                if (currIndex + widths[s[i] - 'a'] > 100)
                 {
                     line++;
                     currIndex = widths[s[i] - 'a'];
@@ -1769,9 +1934,9 @@ namespace ConsoleApplication9
                 {
                     currIndex += widths[s[i] - 'a'];
                 }
-          
+
             }
-            return new int[] { line+1,currIndex};
+            return new int[] { line + 1, currIndex };
         }
 
         /// <summary>
@@ -1862,15 +2027,15 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static int BinaryGap(int n)
         {
-            int maxLen = 0, currLen=0,curr = 0,per=1;
-            while (n>0&&(n&1)==0)
+            int maxLen = 0, currLen = 0, curr = 0, per = 1;
+            while (n > 0 && (n & 1) == 0)
             {
                 n >>= 1;
             }
-            while (n>0)
+            while (n > 0)
             {
                 curr = n & 1;
-                if (curr==0)
+                if (curr == 0)
                 {
                     currLen++;
                 }
@@ -1892,14 +2057,14 @@ namespace ConsoleApplication9
         /// <param name="start"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public static  int DistanceBetweenBusStops(int[] distance, int start, int destination)
+        public static int DistanceBetweenBusStops(int[] distance, int start, int destination)
         {
-            int clockWise = 0, counterClockWise = 0,s=Math.Min(start,destination),e=Math.Max(start,destination);
+            int clockWise = 0, counterClockWise = 0, s = Math.Min(start, destination), e = Math.Max(start, destination);
             for (int i = s; i < e; i++)
             {
-                clockWise += distance[i]; 
+                clockWise += distance[i];
             }
-            for (int i = e; i <distance.Length; i++)
+            for (int i = e; i < distance.Length; i++)
             {
                 counterClockWise += distance[i];
             }
@@ -1907,7 +2072,7 @@ namespace ConsoleApplication9
             {
                 counterClockWise += distance[i];
             }
-            return Math.Min(counterClockWise,clockWise);
+            return Math.Min(counterClockWise, clockWise);
         }
 
 
@@ -1944,7 +2109,7 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static string DayOfTheWeek(int day, int month, int year)
         {
-            int res = (day + 2*month + 3*(month + 1) / 5 + year + year / 4 - year / 100 + year / 400 + 1) % 7;
+            int res = (day + 2 * month + 3 * (month + 1) / 5 + year + year / 4 - year / 100 + year / 400 + 1) % 7;
             string[] strRes = new string[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
             return strRes[res];
         }
@@ -1971,13 +2136,13 @@ namespace ConsoleApplication9
                     bool isArr = pieces[dic[curr]].Length > 1;
                     foreach (var p in pieces[dic[curr]])
                     {
-                        if (arr[i]==p)
+                        if (arr[i] == p)
                         {
                             if (isArr)
                             {
                                 i++;
                             }
-                            
+
                         }
                         else
                         {
@@ -1991,7 +2156,7 @@ namespace ConsoleApplication9
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -2034,14 +2199,14 @@ namespace ConsoleApplication9
         {
             long curr = A[0];
             IList<bool> res = new List<bool>();
-            res.Add(curr%5==0);
+            res.Add(curr % 5 == 0);
             curr <<= 1;
             for (int i = 1; i < A.Length; i++)
             {
                 curr += A[i];
                 curr %= 5;
                 res.Add(curr % 5 == 0);
-                curr<<=1;
+                curr <<= 1;
             }
             return res;
         }
@@ -2060,7 +2225,7 @@ namespace ConsoleApplication9
             {
                 //Array.Sort(dominoes[i]);
                 //res += arr[dominoes[i][0] * 10 + dominoes[i][1]]++;
-                res += arr[dominoes[i][0]>dominoes[i][1]?dominoes[i][1]*10+dominoes[i][0]:dominoes[i][0]*10+dominoes[i][1]]++;
+                res += arr[dominoes[i][0] > dominoes[i][1] ? dominoes[i][1] * 10 + dominoes[i][0] : dominoes[i][0] * 10 + dominoes[i][1]]++;
             }
             return res;
         }
@@ -2074,9 +2239,9 @@ namespace ConsoleApplication9
         public static void DuplicateZeros(int[] arr)
         {
             int i = 0, j = 0;
-            while (j<arr.Length)
+            while (j < arr.Length)
             {
-                if (arr[i]==0)
+                if (arr[i] == 0)
                 {
                     j++;
                 }
@@ -2085,12 +2250,12 @@ namespace ConsoleApplication9
             }
             j--;
             i--;
-            while (i>-1)
+            while (i > -1)
             {
                 if (j < arr.Length)
                     arr[j] = arr[i];
                 j--;
-                if (arr[i]==0)
+                if (arr[i] == 0)
                 {
                     arr[j--] = arr[i];
                 }
@@ -2117,7 +2282,8 @@ namespace ConsoleApplication9
                 }
             }
 
-            Array.Sort(res, (a, b) => {
+            Array.Sort(res, (a, b) =>
+            {
                 return (Math.Abs(a[0] - r0) + Math.Abs(a[1] - c0)) - (Math.Abs(b[0] - r0) + Math.Abs(b[1] - c0));
             });
 
@@ -2134,14 +2300,14 @@ namespace ConsoleApplication9
         public static int rangeSumBST2_Sum = 0;
         public static int RangeSumBST2(TreeNode root, int low, int high)
         {
-            if (root==null)
+            if (root == null)
                 return rangeSumBST2_Sum;
-            if(root.val>low)
+            if (root.val > low)
                 RangeSumBST2(root.left, low, high);
 
-            rangeSumBST2_Sum += root.val>=low&&root.val<=high? root.val:0;
+            rangeSumBST2_Sum += root.val >= low && root.val <= high ? root.val : 0;
 
-            if(root.val<high)
+            if (root.val < high)
                 RangeSumBST2(root.right, low, high);
 
             return rangeSumBST2_Sum;
@@ -2153,8 +2319,8 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static bool IsPowerOfThree(int n)
         {
-            
-            while (n%3==0)
+
+            while (n % 3 == 0)
             {
                 n /= 3;
             }
@@ -2168,7 +2334,7 @@ namespace ConsoleApplication9
         /// <returns></returns>
 
         ///剪枝
-        public static TreeNode increasingBST_Cur=null;
+        public static TreeNode increasingBST_Cur = null;
         public static TreeNode IncreasingBST(TreeNode root)
         {
             TreeNode ans = new TreeNode(0);
@@ -2179,7 +2345,7 @@ namespace ConsoleApplication9
 
         public static void IncreasingBST_Inorder(TreeNode node)
         {
-            if (node == null) 
+            if (node == null)
                 return;
 
             IncreasingBST_Inorder(node.left);
@@ -2222,12 +2388,12 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static int MinOperations(int[] nums)
         {
-            int operateCount=0;
+            int operateCount = 0;
             for (int i = 1; i < nums.Length; i++)
             {
-                if (nums[i]<=nums[i-1])
+                if (nums[i] <= nums[i - 1])
                 {
-                    operateCount += nums[i-1]+1-nums[i];
+                    operateCount += nums[i - 1] + 1 - nums[i];
                     nums[i] = nums[i - 1] + 1;
                 }
             }
@@ -2284,12 +2450,12 @@ namespace ConsoleApplication9
             int n = A.Count;
             DFS_Hanota(n, A, B, C);
         }
-        public static void DFS_Hanota(int n,IList<int> A, IList<int> B, IList<int> C)
+        public static void DFS_Hanota(int n, IList<int> A, IList<int> B, IList<int> C)
         {
             if (n == 1)
             {
                 C.Add(A.Last());
-                A.RemoveAt(A.Count-1);
+                A.RemoveAt(A.Count - 1);
                 return;
             }
 
@@ -18578,9 +18744,9 @@ namespace ConsoleApplication9
         /** Removes the element from in front of queue and returns that element. */
         public int Pop()
         {
-            if (stPop.Count==0)
+            if (stPop.Count == 0)
             {
-                while (stPush.Count>0)
+                while (stPush.Count > 0)
                 {
                     stPop.Push(stPush.Pop());
                 }
@@ -18621,7 +18787,7 @@ namespace ConsoleApplication9
         public void Push(int x)
         {
             stMain.Push(x);
-            if (stAssist.Count==0||stAssist.Peek()>=x)
+            if (stAssist.Count == 0 || stAssist.Peek() >= x)
             {
                 stAssist.Push(x);
             }
@@ -18629,8 +18795,8 @@ namespace ConsoleApplication9
 
         public void Pop()
         {
-            
-            int p=stMain.Pop();
+
+            int p = stMain.Pop();
             if (stAssist.Peek() == p)
             {
                 stAssist.Pop();
@@ -18639,7 +18805,7 @@ namespace ConsoleApplication9
 
         public int Top()
         {
-           return stMain.Peek();
+            return stMain.Peek();
         }
 
         public int GetMin()
@@ -18694,7 +18860,7 @@ namespace ConsoleApplication9
         /** value will always be non-negative. */
         public void Put(int key, int value)
         {
-                arr[key] = value;
+            arr[key] = value;
         }
 
         /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
