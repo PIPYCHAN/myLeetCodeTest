@@ -30,6 +30,28 @@ namespace ConsoleApplication9
     }
     #endregion
 
+    /// <summary>
+    /// 933. 最近的请求次数 https://leetcode-cn.com/problems/number-of-recent-calls/
+    /// </summary>
+    public class RecentCounter
+    {
+        Queue<int> queue;
+        public RecentCounter()
+        {
+            queue = new Queue<int>();
+        }
+
+        public int Ping(int t)
+        {
+            queue.Enqueue(t);
+            while (queue.First()<t-3000)
+            {
+                queue.Dequeue();
+            }
+            return queue.Count();
+        }
+    }
+
     class Program
     {
         private static IList<int> lisTree = new List<int>();
@@ -37,6 +59,22 @@ namespace ConsoleApplication9
         static void Main(string[] args)
         {
             #region old
+
+            //var result = CheckZeroOnes("111000");
+            //var result = IsOneBitCharacter(new int[] { 1,0,1,0});
+            //var result = ConvertToBase7(0);
+            //var result = CountBits(10);
+            //var result = MaxRepeating("ababc","ab");
+            //var result = HeightChecker(new int[] { 5, 1, 2, 3, 4 });
+            //var result = FindPoisonedDuration(new int[] { 1},1000000);
+            //var result = ReorderSpaces("  a");
+            //var result = BuildArray(new int[] { 1,3},3);
+            //var result = SecondHighest("abc1111");
+            //var result = TrailingZeroes2(5);
+            //var result = IsBoomerang(GetMatrix("[[1,0],[1,1],[1,0]]"));
+            //var result = GetMaximumGenerated(7);
+            //var result = SlowestKey(new int[] { 9, 29, 49, 50 }, "cbcd");
+            //var result = IsSumEqual("acb","cba","cdb");
             //var result = LongestPalindrome2("cbbd");
             //var result = Reformat("leetcode12345678");
             //var result = ReplaceDigits("a1c1e1");
@@ -826,24 +864,258 @@ namespace ConsoleApplication9
 
             #endregion
 
-            //var result = CheckZeroOnes("111000");
-            //var result = IsOneBitCharacter(new int[] { 1,0,1,0});
-            //var result = ConvertToBase7(0);
-            //var result = CountBits(10);
-            //var result = MaxRepeating("ababc","ab");
-            //var result = HeightChecker(new int[] { 5, 1, 2, 3, 4 });
-            //var result = FindPoisonedDuration(new int[] { 1},1000000);
-            var result = ReorderSpaces("  a");
+            var result = PaintingPlan(3, 8);
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
         /// <summary>
+        /// LCP 22. 黑白方格画  https://leetcode-cn.com/problems/ccw6C7/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+
+        public static int PaintingPlan(int n, int k)
+        {
+
+            if (k == 0) return 1;
+            if (k < n) return 0;
+            if (k == n * n) return 1;
+            int i; //行
+            int j;  //列  
+            int res = 0;
+            for (i = 0; i < n; i++)
+            {
+                float x = (k - n * i) / (n - i);
+                if (x != (int)x)  //判断x是否为整数
+                    continue;
+                j = (int)x;
+                res += Factorial(n, i) * Factorial(n, j);
+            }
+            return res;
+            //float temp = 0;
+            //int res = 0, j = 0;
+            ////M*n+N*n-M*N=k;
+            //for (int i = 0; i < n; i++)
+            //{
+            //    temp = (k - n * i) / (n - i);
+            //    if ((int)temp == temp)
+            //    {
+            //        j = (int)temp;
+            //        res += Factorial(n, j) * Factorial(n, i);
+            //    }
+            //}
+            //return res;
+
+        }
+
+        /// <summary>
+        /// 排列
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static int Factorial(int n, int m)
+        {
+            if (m == 0)
+                return 1;
+            int up = 1, down = 1, t = n-m+1;
+            while (n>=t)
+            {
+                up *= n--;
+
+            }
+            while (m>0)
+            {
+                down *= m--;
+            }
+            return up / down;
+
+            //return sub_Factorial(n) / (sub_Factorial(m) * sub_Factorial(n - m));
+        }
+        /// <summary>
+        /// 阶乘
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static int sub_Factorial(int num)
+        {
+            int res = 1;
+            for (int i = 1; i <= num; i++)
+            {
+                res *= i;
+            }
+            return res;
+
+        }
+        /// <summary>
+        /// 1880. 检查某单词是否等于两单词之和 https://leetcode-cn.com/problems/check-if-word-equals-summation-of-two-words/
+        /// </summary>
+        /// <param name="firstWord"></param>
+        /// <param name="secondWord"></param>
+        /// <param name="targetWord"></param>
+        /// <returns></returns>
+        public static bool IsSumEqual(string firstWord, string secondWord, string targetWord)
+        {
+            return sub_IsSumEqual(firstWord) + sub_IsSumEqual(secondWord) == sub_IsSumEqual(targetWord);
+        }
+        public static int sub_IsSumEqual(string Word)
+        {
+            int final = 0, curr = 0;
+            for (int i = 0; i < Word.Length; i++)
+            {
+                final *= 10;
+                final += Word[i] - 'a';
+            }
+            return final;
+
+        }
+
+        /// <summary>
+        ///1629. 按键持续时间最长的键 https://leetcode-cn.com/problems/slowest-key/
+        /// </summary>
+        /// <param name="releaseTimes"></param>
+        /// <param name="keysPressed"></param>
+        /// <returns></returns>
+        public static char SlowestKey(int[] releaseTimes, string keysPressed)
+        {
+            int curr = 0, max = releaseTimes[0];
+            char res = keysPressed[0];
+            for (int i = 1; i < keysPressed.Length; i++)
+            {
+                curr = releaseTimes[i] - releaseTimes[i - 1];
+                if (curr > max)
+                {
+                    res = keysPressed[i];
+                    max = curr;
+                }
+                else if (curr == max && keysPressed[i] > res)
+                {
+                    res = keysPressed[i];
+                    max = curr;
+                }
+            }
+            return res;
+
+        }
+        /// <summary>
+        /// 1646. 获取生成数组中的最大值 https://leetcode-cn.com/problems/get-maximum-in-generated-array/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int GetMaximumGenerated(int n)
+        {
+            if (n < 2) return n;
+
+            int[] arr = new int[n + 1];
+            arr[0] = 0;
+            arr[1] = 1;
+
+            int max = 1;
+            for (int i = 2; i <= n; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    arr[i] = arr[i / 2];
+
+                }
+                else
+                {
+                    arr[i] = arr[(i - 1) / 2] + arr[(i - 1) / 2 + 1];
+                }
+                max = Math.Max(max, arr[i]);
+            }
+            return max;
+        }
+
+        /// <summary>
+        /// 1037. 有效的回旋镖 https://leetcode-cn.com/problems/valid-boomerang/
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static bool IsBoomerang(int[][] points)
+        {
+            return (points[1][1] - points[0][1]) * (points[2][0] - points[0][0]) != (points[2][1] - points[0][1]) * (points[1][0] - points[0][0]);
+        }
+
+        /// <summary>
+        /// 面试题 16.05. 阶乘尾数  https://leetcode-cn.com/problems/factorial-zeros-lcci/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int TrailingZeroes2(int n)
+        {
+            int count = 0;
+            while (n > 0)
+            {
+                count += n / 5;
+                n = n / 5;
+            }
+            return count;
+        }
+        /// <summary>
+        /// 1796. 字符串中第二大的数字  https://leetcode-cn.com/problems/second-largest-digit-in-a-string/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static int SecondHighest(string s)
+        {
+            int max = -1, secondMax = -1, curr = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                curr = s[i] - '0';
+                if (s[i] <= '9' && s[i] >= '0')
+                {
+                    if (curr > max)
+                    {
+                        secondMax = max;
+                        max = curr;
+                    }
+                    else if (curr != max && curr > secondMax)
+                    {
+                        secondMax = curr;
+                    }
+                }
+            }
+            return secondMax;
+        }
+
+        /// <summary>
+        /// 1441. 用栈操作构建数组 https://leetcode-cn.com/problems/build-an-array-with-stack-operations/
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static IList<string> BuildArray(int[] target, int n)
+        {
+            List<string> resLis = new List<string>();
+            int index = 0, Count = 0;
+            for (int i = 1; i <= n && Count < target.Length; i++)
+            {
+
+                if (target[index] == i)
+                {
+                    resLis.Add("Push");
+                    index++;
+                    Count++;
+                }
+                else
+                {
+                    resLis.Add("Push");
+                    resLis.Add("Pop");
+                }
+            }
+            return resLis;
+        }
+
+        /// <summary>
         /// 1592. 重新排列单词间的空格 https://leetcode-cn.com/problems/rearrange-spaces-between-words/
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static  string ReorderSpaces(string text)
+        public static string ReorderSpaces(string text)
         {
             int spaceCount = 0;
             List<string> lisStr = new List<string>();
@@ -852,7 +1124,7 @@ namespace ConsoleApplication9
                 if (text[i] != ' ')
                 {
                     string currStr = "";
-                    while (i<text.Length&&text[i] != ' ')
+                    while (i < text.Length && text[i] != ' ')
                     {
                         currStr += text[i++];
                     }
@@ -866,12 +1138,12 @@ namespace ConsoleApplication9
             }
             int newWidth = lisStr.Count == 1 ? spaceCount : spaceCount / (lisStr.Count - 1);
             string strNewSpace = "";
-            while (newWidth>0)
+            while (newWidth > 0)
             {
                 strNewSpace += " ";
                 newWidth--;
             }
-            int endWidth= lisStr.Count == 1 ? spaceCount : spaceCount %(lisStr.Count - 1);
+            int endWidth = lisStr.Count == 1 ? spaceCount : spaceCount % (lisStr.Count - 1);
             string strEndSpace = "";
             while (endWidth > 0)
             {
@@ -880,7 +1152,7 @@ namespace ConsoleApplication9
             }
 
             string strRes = "";
-            for (int i = 0; i < lisStr.Count-1; i++)
+            for (int i = 0; i < lisStr.Count - 1; i++)
             {
                 strRes += lisStr[i] + strNewSpace;
             }
@@ -902,9 +1174,9 @@ namespace ConsoleApplication9
         public static int FindPoisonedDuration(int[] timeSeries, int duration)
         {
             int last = 0;
-            for (int i = 0; i < timeSeries.Length-1; i++)
+            for (int i = 0; i < timeSeries.Length - 1; i++)
             {
-                if (timeSeries[i]+duration>timeSeries[i+1])
+                if (timeSeries[i] + duration > timeSeries[i + 1])
                 {
                     last += timeSeries[i + 1] - timeSeries[i];
                 }
@@ -913,9 +1185,9 @@ namespace ConsoleApplication9
                     last += duration;
                 }
             }
-            
-            
-            return last+duration;
+
+
+            return last + duration;
         }
 
         /// <summary>
@@ -932,11 +1204,11 @@ namespace ConsoleApplication9
             {
                 arr[heights[i]]++;
             }
-            for (int i = 0,j=0; i < arr.Length; i++)
+            for (int i = 0, j = 0; i < arr.Length; i++)
             {
-                while (arr[i]>0)
+                while (arr[i] > 0)
                 {
-                    if (i!=heights[j])
+                    if (i != heights[j])
                     {
                         count++;
                     }
@@ -993,9 +1265,9 @@ namespace ConsoleApplication9
             res[0] = 0;
             for (int i = 1; i <= n; i++)
             {
-                if (i%2==0)
+                if (i % 2 == 0)
                 {
-                    res[i] = res[i/2];
+                    res[i] = res[i / 2];
                 }
                 else
                 {
@@ -1549,16 +1821,7 @@ namespace ConsoleApplication9
             return res;
 
         }
-        /// <summary>
-        /// LCP 22. 黑白方格画 https://leetcode-cn.com/problems/ccw6C7/
-        /// </summary>
-        /// <param name="n"></param>
-        /// <param name="k"></param>
-        /// <returns></returns>
-        public static int PaintingPlan(int n, int k)
-        {
-            return 0;
-        }
+
         /// <summary>
         /// 953. 验证外星语词典 https://leetcode-cn.com/problems/verifying-an-alien-dictionary/ 
         /// </summary>
