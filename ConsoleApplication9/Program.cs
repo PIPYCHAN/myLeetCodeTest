@@ -30,27 +30,7 @@ namespace ConsoleApplication9
     }
     #endregion
 
-    /// <summary>
-    /// 933. 最近的请求次数 https://leetcode-cn.com/problems/number-of-recent-calls/
-    /// </summary>
-    public class RecentCounter
-    {
-        Queue<int> queue;
-        public RecentCounter()
-        {
-            queue = new Queue<int>();
-        }
 
-        public int Ping(int t)
-        {
-            queue.Enqueue(t);
-            while (queue.First()<t-3000)
-            {
-                queue.Dequeue();
-            }
-            return queue.Count();
-        }
-    }
 
     class Program
     {
@@ -864,10 +844,351 @@ namespace ConsoleApplication9
 
             #endregion
 
-            var result = PaintingPlan(3, 8);
-
+            //var result = PaintingPlan(3, 8);
+            //var result = NearestValidPoint(3,4,GetMatrix(" [[1,2],[3,1],[2,4],[2,3],[4,4]]"));
+            //var result = PurchasePlans(new int[] { 2, 5, 3, 5 }, 6);
+            //int test = int.MaxValue;
+            //var result = ContainsPattern(new int[] { 1, 2, 4, 4, 4, 4 },1,3);
+            ////var result = NumWays(5,GetMatrix("[[0,2],[2,1],[3,4],[2,3],[1,4],[2,0],[0,4]]"),3);
+            //var result = FloodFill(GetMatrix("[[0,0,0],[0,1,1]]"),1,1,2);
+            //var result = CountGoodSubstrings("aababcabc");
+            //var result = IsCovered(GetMatrix("[[1,2],[3,4],[5,6]]"),2,5);
+            //var result = LongestNiceSubstring("aAa");
+            var result = HalfQuestions(new int[] { 2, 1, 6, 2 });
             Console.WriteLine("end");
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// https://leetcode-cn.com/problems/WqXACV/
+        /// </summary>
+        /// <param name="questions"></param>
+        /// <returns></returns>
+        public static int HalfQuestions(int[] questions)
+        {
+            int[] arr = new int[1001];
+            for (int i = 0; i < questions.Length; i++)
+            {
+                arr[questions[i]]++;
+            }
+            Array.Sort(arr,(x,y)=> { return y.CompareTo(x); });
+
+            int res = 0,sum=0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                sum += arr[i];
+                res++;
+                if (sum>=questions.Length/2)
+                {
+                    break;
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 1763. 最长的美好子字符串 https://leetcode-cn.com/problems/longest-nice-substring/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static  string LongestNiceSubstring(string s)
+        {
+            int n = s.Length;
+            string res = "";
+            for (int i = 0; i < s.Length; i++)
+            {
+                int up = 0, low = 0;
+                for (int j = i; j < s.Length; j++)
+                {
+                    if (s[j]>='a')
+                    {
+                        low |= 1<<s[j] - 'a';
+                    }
+                    else
+                    {
+                        up |= 1<<s[j] - 'A';
+                    }
+                    if (up==low&&j-i+1>res.Length)
+                    {
+                        res = s.Substring(i,j-i+1);
+                    }
+                }
+            }
+            return res;
+        }
+
+
+        /// <summary>
+        ///1893. 检查是否区域内所有整数都被覆盖  https://leetcode-cn.com/problems/check-if-all-the-integers-in-a-range-are-covered/
+        /// </summary>
+        /// <param name="ranges"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static bool IsCovered(int[][] ranges, int left, int right)
+        {
+            int[] diff = new int[52]; ;   // 差分数组
+            foreach (int[] range in ranges)
+            {
+                ++diff[range[0]];
+                --diff[range[1] + 1];
+            }
+            // 前缀和
+            int curr = 0;
+            for (int i = 1; i <= 50; ++i)
+            {
+                curr += diff[i];
+                if (i >= left && i <= right && curr <= 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+            //int[] arr = new int[51];
+            //for (int i = left; i <= right; i++)
+            //{
+            //    arr[i]++;
+            //}
+
+            //for (int i = 0; i < ranges.Length; i++)
+            //{
+            //    for (int j = ranges[i][0]; j <=ranges[i][1]; j++)
+            //    {
+            //        if (arr[j] != 0)
+            //            arr[j] = 0;
+            //    }
+            //}
+            //for (int i = 0; i < arr.Length; i++)
+            //{
+            //    if (arr[i] != 0)
+            //        return false;
+            //}
+            //return true;
+        }
+        /// <summary>
+        ///1876. 长度为三且各字符不同的子字符串  https://leetcode-cn.com/problems/substrings-of-size-three-with-distinct-characters/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static int CountGoodSubstrings(string s)
+        {
+            int res = 0;
+            for (int i = 0; i < s.Length-2; i++)
+            {
+                if (s[i]!=s[i+1]&&s[i+1]!=s[i+2]&&s[i]!=s[i+2])
+                {
+                    res++;
+                }
+            }
+            return res;
+
+        }
+
+        /// <summary>
+        /// 733. 图像渲染 https://leetcode-cn.com/problems/flood-fill/  
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="sr"></param>
+        /// <param name="sc"></param>
+        /// <param name="newColor"></param>
+        /// <returns></returns>
+        public static int[][] FloodFill_Image;
+        public static int[][] FloodFill(int[][] image, int sr, int sc, int newColor)
+        {
+            if (image[sr][sc] == newColor)
+            {
+                return image;
+            }
+            FloodFill_Image = image;
+            
+            DS_FloodFill(sr, sc, newColor, image[sr][sc]);
+            return FloodFill_Image;
+        }
+        public static void DS_FloodFill(int sr, int sc, int newColor, int oriColor)
+        {
+            if (sr >= FloodFill_Image.Length || sc >= FloodFill_Image[0].Length||sr<0||sc<0||FloodFill_Image[sr][sc] != oriColor  )
+            {
+                return;
+            }
+            FloodFill_Image[sr][sc] = newColor;
+
+            DS_FloodFill(sr - 1, sc, newColor, oriColor);
+            DS_FloodFill(sr + 1, sc, newColor, oriColor);
+            DS_FloodFill(sr, sc - 1, newColor, oriColor);
+            DS_FloodFill(sr, sc + 1, newColor, oriColor);
+        }
+
+        /// <summary>
+        ///1566. 重复至少 K 次且长度为 M 的模式  https://leetcode-cn.com/problems/detect-pattern-of-length-m-repeated-k-or-more-times/
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="m"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static bool ContainsPattern(int[] arr, int m, int k)
+        {
+            int n = arr.Length;
+            for (int i = 0; i < n - m * k + 1; i++)
+            {
+                int j = i + m;
+                for (; j < i + m * k; j++)
+                {
+                    if (arr[j] != arr[j - m])
+                        break;
+                }
+                if (j == i + m * k)
+                    return true;
+            }
+            return false;
+
+            //bool res = false;
+            //for (int i = 0; i <= arr.Length-m; i++)
+            //{
+            //    int j = i;
+            //    string curr = "",compare="";
+            //    bool isSame = true;
+            //    for (; j < arr.Length&&j<i+m; j++)
+            //    {
+            //        curr += arr[j];
+            //    }
+            //    int g = j,sameCount=1;
+
+            //    while (g<arr.Length)
+            //    {
+            //        for (; g < arr.Length && g < j + m; g++)
+            //        {
+            //            compare += arr[g];
+            //        }
+            //        j = g;
+            //        if (compare!=curr)
+            //        {
+            //            break;
+            //        }
+            //        else
+            //        {
+            //            sameCount++;
+            //            if (sameCount >= k)
+            //            {
+            //                return true;
+            //            }
+            //        }
+            //        compare = "";
+            //    }
+            //    if (sameCount >=k)
+            //    {
+            //        return true;
+            //    }
+
+            //}
+            //return res;
+        }
+
+        /// <summary>
+        /// LCP 28. 采购方案 https://leetcode-cn.com/problems/4xy4Wx/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static int PurchasePlans(int[] nums, int target)
+        {
+            //桶排序+双指针
+            long mod = 1000000007, res = 0;
+
+            int[] bucket = new int[100001];
+            //Array.Sort(nums);
+            for (int g = 0; g < nums.Length; g++)
+            {
+                bucket[nums[g]]++;
+            }
+            int i = 0, j = 0;
+            while (i < nums.Length)
+            {
+                while (bucket[j] == 0)
+                {
+                    j++;
+                }
+                while (bucket[j] > 0)
+                {
+                    nums[i++] = j;
+                    bucket[j]--;
+                }
+            }
+
+            i = 0;
+            j = nums.Length - 1;
+            while (i < j)
+            {
+                if (nums[i] + nums[j] > target)
+                {
+                    j--;
+                }
+                else
+                {
+                    res += j - i;
+                    i++;
+                }
+            }
+            return (int)(res % mod);
+
+            ////二分查找
+            //long mod = 1000000007, res = 0;
+            //Array.Sort(nums);
+            //int diff = 0,j=0;
+            //for (int i = 0; i < nums.Length; i++)
+            //{
+            //    diff = target - nums[i];
+            //    if (diff>=nums[i])
+            //    {
+            //      j = PurchasePlans_BinarySearch(nums, target - nums[i]);
+            //        res = (res + j - i - 1) % mod;
+            //    }
+            //}
+            //return (int)res;
+
+        }
+
+        public static int PurchasePlans_BinarySearch(int[] nums, int tartget)
+        {
+            int left = 0, right = nums.Length, middle = left + (right - left) / 2;
+            while (left < right)
+            {
+                middle = left + (right - left) / 2;
+                if (nums[middle] <= tartget)
+                {
+                    left = middle + 1;
+                }
+                else
+                {
+                    right = middle;
+                }
+            }
+            return left;
+        }
+
+        /// <summary>
+        /// 1779. 找到最近的有相同 X 或 Y 坐标的点 https://leetcode-cn.com/problems/find-nearest-point-that-has-the-same-x-or-y-coordinate/
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static int NearestValidPoint(int x, int y, int[][] points)
+        {
+            int min = int.MaxValue, minIndex = -1;
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (points[i][0] == x || points[i][1] == y)
+                {
+                    int curr = Math.Abs(points[i][0] - x) + Math.Abs(points[i][1] - y);
+                    if (min > curr)
+                    {
+                        min = curr;
+                        minIndex = i;
+                    }
+                }
+
+            }
+            return minIndex;
         }
         /// <summary>
         /// LCP 22. 黑白方格画  https://leetcode-cn.com/problems/ccw6C7/
@@ -920,13 +1241,13 @@ namespace ConsoleApplication9
         {
             if (m == 0)
                 return 1;
-            int up = 1, down = 1, t = n-m+1;
-            while (n>=t)
+            int up = 1, down = 1, t = n - m + 1;
+            while (n >= t)
             {
                 up *= n--;
 
             }
-            while (m>0)
+            while (m > 0)
             {
                 down *= m--;
             }
@@ -18984,6 +19305,28 @@ namespace ConsoleApplication9
         }
     }
 
+
+    /// <summary>
+    /// 933. 最近的请求次数 https://leetcode-cn.com/problems/number-of-recent-calls/
+    /// </summary>
+    public class RecentCounter
+    {
+        Queue<int> queue;
+        public RecentCounter()
+        {
+            queue = new Queue<int>();
+        }
+
+        public int Ping(int t)
+        {
+            queue.Enqueue(t);
+            while (queue.First() < t - 3000)
+            {
+                queue.Dequeue();
+            }
+            return queue.Count();
+        }
+    }
     /// <summary>
     ///面试题 03.04. 化栈为队  https://leetcode-cn.com/problems/implement-queue-using-stacks-lcci/
     /// </summary>
