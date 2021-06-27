@@ -39,7 +39,25 @@ namespace ConsoleApplication9
         static void Main(string[] args)
         {
             #region old
-
+            //var result = LastRemaining(5,3);
+            //var result = PaintingPlan(3, 8);
+            //var result = NearestValidPoint(3,4,GetMatrix(" [[1,2],[3,1],[2,4],[2,3],[4,4]]"));
+            //var result = PurchasePlans(new int[] { 2, 5, 3, 5 }, 6);
+            //int test = int.MaxValue;
+            //var result = ContainsPattern(new int[] { 1, 2, 4, 4, 4, 4 },1,3);
+            ////var result = NumWays(5,GetMatrix("[[0,2],[2,1],[3,4],[2,3],[1,4],[2,0],[0,4]]"),3);
+            //var result = FloodFill(GetMatrix("[[0,0,0],[0,1,1]]"),1,1,2);
+            //var result = CountGoodSubstrings("aababcabc");
+            //var result = IsCovered(GetMatrix("[[1,2],[3,4],[5,6]]"),2,5);
+            //var result = LongestNiceSubstring("aAa");
+            //var result = HalfQuestions(new int[] { 2, 1, 6, 2 });
+            //var result = MakeEqual(new string[] { "abc", "aabc", "bc" });
+            //var result = LargestOddNumber("35427");
+            //var result = RobotSim(new int[] { -2, 8, 3, 7, -1 },GetMatrix("[[-4,-1],[1,-1],[1,4],[5,0],[4,5],[-2,-1],[2,-5],[5,1],[-3,-1],[5,-3]]"));
+            //var result = ShiftGrid(GetMatrix("[[1],[2],[3],[4],[7],[6],[5]]"),23);
+            //var result = ImageSmoother(GetMatrix("[[2,3,4],[5,6,7],[8,9,10],[11,12,13],[14,15,16]]"));
+            //var result = Tictactoe(GetMatrix("[[0,0],[1,1],[2,0],[1,0],[1,2],[2,1],[0,1],[0,2],[2,2]]"));
+            //var result = ConstructRectangle(4);
             //var result = CheckZeroOnes("111000");
             //var result = IsOneBitCharacter(new int[] { 1,0,1,0});
             //var result = ConvertToBase7(0);
@@ -844,23 +862,344 @@ namespace ConsoleApplication9
 
             #endregion
 
-            //var result = PaintingPlan(3, 8);
-            //var result = NearestValidPoint(3,4,GetMatrix(" [[1,2],[3,1],[2,4],[2,3],[4,4]]"));
-            //var result = PurchasePlans(new int[] { 2, 5, 3, 5 }, 6);
-            //int test = int.MaxValue;
-            //var result = ContainsPattern(new int[] { 1, 2, 4, 4, 4, 4 },1,3);
-            ////var result = NumWays(5,GetMatrix("[[0,2],[2,1],[3,4],[2,3],[1,4],[2,0],[0,4]]"),3);
-            //var result = FloodFill(GetMatrix("[[0,0,0],[0,1,1]]"),1,1,2);
-            //var result = CountGoodSubstrings("aababcabc");
-            //var result = IsCovered(GetMatrix("[[1,2],[3,4],[5,6]]"),2,5);
-            //var result = LongestNiceSubstring("aAa");
-            var result = HalfQuestions(new int[] { 2, 1, 6, 2 });
+            //var result = NumWays(5, GetMatrix("[[0,2],[2,1],[3,4],[2,3],[1,4],[2,0],[0,4]]"), 3);
+            var result = NumMovesStones(1,3,5);
+            TripleInOne ti = new TripleInOne(1);
+            ti.Push(0,1);
+            ti.Push(0, 2);
+            var reslt2=ti.Pop(0);
+            var reslt3 = ti.Pop(0);
+
+
             Console.WriteLine("end");
             Console.ReadKey();
         }
+        /// <summary>
+        ///1033. 移动石子直到连续 https://leetcode-cn.com/problems/moving-stones-until-consecutive/
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static int[] NumMovesStones(int a, int b, int c)
+        {
+            int x = Math.Min(a, Math.Min(b, c)),
+                z = Math.Max(a, Math.Max(b, c)),
+                y = a + b + c - x - z;
+            if (z - y == 1 && y - x == 1)
+                return new int[] { 0, 0 };
+            if (z - y <= 2 || y - x <= 2)
+                return new int[] { 1, z - x - 2 };
+            return new int[] { 2, z - x - 2 };
+
+        }
 
         /// <summary>
-        /// https://leetcode-cn.com/problems/WqXACV/
+        ///LCP 07. 传递信息 https://leetcode-cn.com/problems/chuan-di-xin-xi/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="relation"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static int NumWays(int n, int[][] relation, int k)
+        {
+            Dictionary<int, List<int>> dic = new Dictionary<int, List<int>>();
+            for (int i = 0; i < relation.Length; i++)
+            {
+                if (dic.ContainsKey(relation[i][0]))
+                {
+                    dic[relation[i][0]].Add(relation[i][1]);
+                }
+                else
+                {
+                    dic[relation[i][0]] = new List<int>() { relation[i][1] };
+                }
+            }
+            NumWays_DS(n, dic, k, 0, 0);
+            return NumWays_Res;
+
+        }
+        public static int NumWays_Res = 0;
+        public static void NumWays_DS(int n, Dictionary<int, List<int>> dic, int k, int frequency, int currPerson)
+        {
+
+            if (frequency == k)
+            {
+                if (currPerson == n - 1)
+                {
+                    NumWays_Res++;
+                }
+                return;
+            }
+            if (!dic.ContainsKey(currPerson))
+            {
+                return;
+            }
+            foreach (var nextPerson in dic[currPerson])
+            {
+                NumWays_DS(n, dic, k, frequency + 1, nextPerson);
+            }
+        }
+
+        /// <summary>
+        ///剑指 Offer 62. 圆圈中最后剩下的数字  https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static int LastRemaining(int n, int m)
+        {
+            List<int> lis = new List<int>();
+            for (int i = 0; i < n; i++)
+            {
+                lis.Add(i + 1);
+            }
+            while (lis.Count > 1)
+            {
+                lis.RemoveAt(lis.Count >= m ? m - 1 : lis.Count % m - 1);
+            }
+            return lis[0];
+        }
+        /// <summary>
+        ///492. 构造矩形 https://leetcode-cn.com/problems/construct-the-rectangle/
+        /// </summary>
+        /// <param name="area"></param>
+        /// <returns></returns>
+        public static int[] ConstructRectangle(int area)
+        {
+            int w = (int)Math.Sqrt(area), l = 0;
+            for (; w > 0; w--)
+            {
+                l = area / w;
+                if (l * w == area)
+                {
+                    return new int[] { l, area / l };
+                }
+            }
+            return new int[] { l, w };
+        }
+
+        /// <summary>
+        /// 1275. 找出井字棋的获胜者 https://leetcode-cn.com/problems/find-winner-on-a-tic-tac-toe-game/
+        /// </summary>
+        /// <param name="moves"></param>
+        /// <returns></returns>
+        public static string Tictactoe(int[][] moves)
+        {
+            int[] count = new int[8];//0-2row 3-5col 6-7diagonal
+            int n = moves.Length;
+            for (int i = n - 1; i > -1; i -= 2)
+            {
+                count[moves[i][0]]++;
+                count[moves[i][1] + 3]++;
+                if (moves[i][0] == moves[i][1])
+                    count[6]++;
+                if (moves[i][0] + moves[i][1] == 2)
+                    count[7]++;
+
+                if (count[moves[i][0]] == 3 || count[moves[i][1] + 3] == 3 || count[6] == 3 || count[7] == 3)
+                {
+                    return n % 2 == 0 ? "B" : "A";
+                }
+
+            }
+            return n == 9 ? "Draw" : "Pending";
+
+
+        }
+        /// <summary>
+        /// 661. 图片平滑器 https://leetcode-cn.com/problems/image-smoother/
+        /// </summary>
+        /// <param name="img"></param>
+        /// <returns></returns>
+        public static int[][] ImageSmoother(int[][] img)
+        {
+            #region Simulation
+            int n = img.Length, m = img[0].Length;
+            int[][] res = new int[n][];
+            for (int i = 0; i < n; i++)
+            {
+                res[i] = new int[m];
+            }
+
+            int[] testArrX = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 },
+                  testArrY = new int[] { -1, -1, -1, 0, 0, 1, 1, 1 };
+            int currSum = 0, testX = 0, testY = 0, validCount = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    currSum = img[i][j];
+                    validCount = 0;
+                    for (int k = 0; k < 8; k++)
+                    {
+                        testX = i + testArrX[k];
+                        testY = j + testArrY[k];
+                        if (testX > -1 && testY > -1 && testX < n && testY < m)
+                        {
+                            currSum += img[testX][testY];
+                            validCount++;
+                        }
+                    }
+                    res[i][j] = currSum / (validCount + 1);
+                }
+            }
+            return res;
+
+
+            #endregion
+        }
+        /// <summary>
+        /// 1260. 二维网格迁移 https://leetcode-cn.com/problems/shift-2d-grid/
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> ShiftGrid(int[][] grid, int k)
+        {
+            int n = grid.Length, m = grid[0].Length;
+            int[][] resArr = new int[n][];
+            for (int i = 0; i < n; i++)
+            {
+                int[] curr = new int[m];
+                for (int j = 0; j < m; j++)
+                {
+                    curr[j] = 0;
+                }
+                resArr[i] = curr;
+            }
+            for (int i = 0; i < n; i++)
+            {
+
+                for (int j = 0; j < m; j++)
+                {
+
+                    resArr[(i + (j + k) / m) % n][(j + k) % m] = grid[i][j];
+                }
+            }
+            return resArr as IList<IList<int>>;
+
+
+
+
+            //int n = grid.Length, m = grid[0].Length;
+            //while (k-- > 0)
+            //{
+            //    int pre = grid[n - 1][m - 1];
+            //    for (int i = 0; i < n; i++)
+            //    {
+            //        for (int j = 0; j < m; j++)
+            //        {
+            //            int temp = grid[i][j];
+            //            grid[i][j] = pre;
+            //            pre = temp;
+            //        }
+            //    }
+            //}
+
+            //IList<IList<int>> res = new List<IList<int>>();
+
+            //for (int i = 0; i < n; i++)
+            //{
+            //    IList<int> currRow = new List<int>();
+            //    for (int j = 0; j < m; j++)
+            //    {
+            //        currRow.Add(grid[i][j]);
+            //    }
+            //    res.Add(currRow);
+            //}
+            //return res;
+        }
+
+
+        /// <summary>
+        ///874. 模拟行走机器人  https://leetcode-cn.com/problems/walking-robot-simulation/
+        /// </summary>
+        /// <param name="commands"></param>
+        /// <param name="obstacles"></param>
+        /// <returns></returns>
+        public static int RobotSim(int[] commands, int[][] obstacles)
+        {
+            int currDire = 0, currX = 0, currY = 0, res = 0;
+            int[] direY = new int[] { 1, 0, -1, 0 },
+                  direX = new int[] { 0, 1, 0, -1 };
+            HashSet<KeyValuePair<int, int>> set = new HashSet<KeyValuePair<int, int>>();
+
+            for (int i = 0; i < obstacles.Length; i++)
+            {
+                set.Add(new KeyValuePair<int, int>(obstacles[i][0], obstacles[i][1]));
+            }
+
+            for (int i = 0; i < commands.Length; i++)
+            {
+                if (commands[i] > 0)
+                {
+
+                    for (int j = 1; j <= commands[i]; j++)
+                    {
+                        int nextX = currX + direX[currDire], nextY = currY + direY[currDire];
+                        if (set.Contains(new KeyValuePair<int, int>(nextX, nextY)))
+                        {
+                            break;
+                        }
+                        currX = nextX;
+                        currY = nextY;
+                        res = Math.Max(res, currX * currX + currY * currY);
+                    }
+                }
+                else
+                {
+                    currDire = commands[i] == -1 ? (currDire + 1) % 4 : (currDire + 3) % 4;
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 1903. 字符串中的最大奇数 https://leetcode-cn.com/problems/largest-odd-number-in-string/
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string LargestOddNumber(string num)
+        {
+            string res = "";
+            for (int i = num.Length - 1; i > -1; i--)
+            {
+                int curr = num[i] - '0';
+                if (curr % 2 != 0)
+                {
+                    return num.Substring(0, i + 1);
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        ///1897. 重新分配字符使所有字符串都相等  https://leetcode-cn.com/problems/redistribute-characters-to-make-all-strings-equal/
+        /// </summary>
+        /// <param name="words"></param>
+        /// <returns></returns>
+        public static bool MakeEqual(string[] words)
+        {
+            int[] frequency = new int[26];
+            for (int i = 0; i < words.Length; i++)
+            {
+                for (int j = 0; j < words[i].Length; j++)
+                {
+                    frequency[words[i][j] - 'a']++;
+                }
+            }
+            for (int i = 0; i < frequency.Length; i++)
+            {
+                if (frequency[i] % words.Length != 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        /// <summary>
+        /// LCS 02. 完成一半题目 https://leetcode-cn.com/problems/WqXACV/
         /// </summary>
         /// <param name="questions"></param>
         /// <returns></returns>
@@ -871,14 +1210,14 @@ namespace ConsoleApplication9
             {
                 arr[questions[i]]++;
             }
-            Array.Sort(arr,(x,y)=> { return y.CompareTo(x); });
+            Array.Sort(arr, (x, y) => { return y.CompareTo(x); });
 
-            int res = 0,sum=0;
+            int res = 0, sum = 0;
             for (int i = 0; i < arr.Length; i++)
             {
                 sum += arr[i];
                 res++;
-                if (sum>=questions.Length/2)
+                if (sum >= questions.Length / 2)
                 {
                     break;
                 }
@@ -891,7 +1230,7 @@ namespace ConsoleApplication9
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static  string LongestNiceSubstring(string s)
+        public static string LongestNiceSubstring(string s)
         {
             int n = s.Length;
             string res = "";
@@ -900,17 +1239,17 @@ namespace ConsoleApplication9
                 int up = 0, low = 0;
                 for (int j = i; j < s.Length; j++)
                 {
-                    if (s[j]>='a')
+                    if (s[j] >= 'a')
                     {
-                        low |= 1<<s[j] - 'a';
+                        low |= 1 << s[j] - 'a';
                     }
                     else
                     {
-                        up |= 1<<s[j] - 'A';
+                        up |= 1 << s[j] - 'A';
                     }
-                    if (up==low&&j-i+1>res.Length)
+                    if (up == low && j - i + 1 > res.Length)
                     {
-                        res = s.Substring(i,j-i+1);
+                        res = s.Substring(i, j - i + 1);
                     }
                 }
             }
@@ -973,9 +1312,9 @@ namespace ConsoleApplication9
         public static int CountGoodSubstrings(string s)
         {
             int res = 0;
-            for (int i = 0; i < s.Length-2; i++)
+            for (int i = 0; i < s.Length - 2; i++)
             {
-                if (s[i]!=s[i+1]&&s[i+1]!=s[i+2]&&s[i]!=s[i+2])
+                if (s[i] != s[i + 1] && s[i + 1] != s[i + 2] && s[i] != s[i + 2])
                 {
                     res++;
                 }
@@ -1000,13 +1339,13 @@ namespace ConsoleApplication9
                 return image;
             }
             FloodFill_Image = image;
-            
+
             DS_FloodFill(sr, sc, newColor, image[sr][sc]);
             return FloodFill_Image;
         }
         public static void DS_FloodFill(int sr, int sc, int newColor, int oriColor)
         {
-            if (sr >= FloodFill_Image.Length || sc >= FloodFill_Image[0].Length||sr<0||sc<0||FloodFill_Image[sr][sc] != oriColor  )
+            if (sr >= FloodFill_Image.Length || sc >= FloodFill_Image[0].Length || sr < 0 || sc < 0 || FloodFill_Image[sr][sc] != oriColor)
             {
                 return;
             }
@@ -6362,26 +6701,7 @@ namespace ConsoleApplication9
             //}
             //return res.ToArray();
         }
-        /// <summary>
-        /// https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/ 剑指 Offer 62. 圆圈中最后剩下的数字
-        /// </summary>
-        /// <param name="n"></param>
-        /// <param name="m"></param>
-        /// <returns></returns>
-        public static int LastRemaining(int n, int m)
-        {
-            List<int> lis = new List<int>();
-            for (int i = 0; i < n; i++)
-            {
-                lis.Add(i);
-            }
-            while (lis.Count > 1)
-            {
-                lis.RemoveAt(lis.Count >= m ? m - 1 : lis.Count % m - 1);
-            }
-            return lis[0];
 
-        }
 
 
 
@@ -7738,16 +8058,7 @@ namespace ConsoleApplication9
             }
             return new String(arr);
         }
-        /// <summary>
-        /// https://leetcode-cn.com/problems/walking-robot-simulation/ 874. 模拟行走机器人
-        /// </summary>
-        /// <param name="commands"></param>
-        /// <param name="obstacles"></param>
-        /// <returns></returns>
-        public static int RobotSim(int[] commands, int[][] obstacles)
-        {
-            return 1;
-        }
+
 
         /// <summary>
         /// https://leetcode-cn.com/problems/minimum-changes-to-make-alternating-binary-string/ 1758. 生成交替二进制字符串的最少操作数
@@ -12073,21 +12384,7 @@ namespace ConsoleApplication9
             //return result;
         }
 
-        ///// <summary>
-        ///// https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/  剑指 Offer 62. 圆圈中最后剩下的数字
-        ///// </summary>
-        ///// <param name="n"></param>
-        ///// <param name="m"></param>
-        ///// <returns></returns>
-        //public static int LastRemaining(int n, int m)
-        //{
-        //    int pos = 0; // 最终活下来那个人的初始位置
-        //    for (int i = 2; i <= n; i++)
-        //    {
-        //        pos = (pos + m) % i;  // 每次循环右移
-        //    }
-        //    return pos;
-        //}
+
         /// <summary>
         /// https://leetcode-cn.com/problems/surface-area-of-3d-shapes/  892. 三维形体的表面积
         /// </summary>
@@ -19551,9 +19848,141 @@ namespace ConsoleApplication9
         }
     }
 
+    /// <summary>
+    /// 面试题 03.06. 动物收容所  https://leetcode-cn.com/problems/animal-shelter-lcci/
+    /// </summary>
 
+    public class AnimalShelf
+    {
+        LinkedList<int[]> queueCat;
+        LinkedList<int[]> queueDog;
+        public AnimalShelf()
+        {
+            queueCat = new LinkedList<int[]>();
+            queueDog = new LinkedList<int[]>();
+        }
 
+        public void Enqueue(int[] animal)
+        {
+            if (animal[1] == 0)
+            {
+                queueCat.AddLast(animal);
+            }
+            else
+            {
+                queueDog.AddLast(animal);
+            }
+        }
 
+        public int[] DequeueAny()
+        {
+            if (queueCat.Count > 0 && queueDog.Count > 0)
+            {
+                if (queueCat.First()[0] < queueDog.First()[0])
+                {
+                    var cat = queueCat.First();
+                    queueCat.RemoveFirst();
+                    return cat;
+                }
+                else
+                {
+                    var dog = queueDog.First();
+                    queueDog.RemoveFirst();
+                    return dog;
+                }
+                return new int[] { -1, -1 };
+            }
+            if (queueCat.Count > 0)
+            {
+                var cat = queueCat.First();
+                queueCat.RemoveFirst();
+                return cat;
+            }
+            if (queueDog.Count > 0)
+            {
+                var dog = queueDog.First();
+                queueDog.RemoveFirst();
+                return dog;
+            }
+            return new int[] { -1, -1 };
+        }
+
+        public int[] DequeueDog()
+        {
+            if (queueDog.Count > 0)
+            {
+                var dog = queueDog.First();
+                queueDog.RemoveFirst();
+                return dog;
+            }
+            return new int[] { -1, -1 };
+        }
+
+        public int[] DequeueCat()
+        {
+            if (queueCat.Count > 0)
+            {
+                var cat = queueCat.First();
+                queueCat.RemoveFirst();
+                return cat;
+            }
+            return new int[] { -1, -1 };
+        }
+    }
+
+    /// <summary>
+    /// 面试题 03.01. 三合一 https://leetcode-cn.com/problems/three-in-one-lcci/
+    /// </summary>
+    public class TripleInOne
+    {
+        int[] stack;
+        int[] top;
+        public TripleInOne(int stackSize)
+        {
+            stack = new int[stackSize*3];
+            top = new int[3];
+            for (int i = 0; i < 3; i++)
+            {
+                top[i] = i;
+            }
+        }
+
+        public void Push(int stackNum, int value)
+        {
+            if (top[stackNum] < stack.Length)
+            {
+
+                stack[top[stackNum]] = value;
+                top[stackNum] += 3;
+            }
+        }
+
+        public int Pop(int stackNum)
+        {
+
+            if (top[stackNum]<3)
+            {
+                return  -1;
+            }
+            top[stackNum] -= 3;
+            return stack[top[stackNum]];
+        }
+
+        public int Peek(int stackNum)
+        {
+
+            if (top[stackNum] < 3)
+            {
+                return -1;
+            }
+            return stack[top[stackNum]-3];
+        }
+
+        public bool IsEmpty(int stackNum)
+        {
+            return top[stackNum]-3 < 0;
+        }
+    }
 
 }
 
