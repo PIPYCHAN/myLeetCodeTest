@@ -863,17 +863,72 @@ namespace ConsoleApplication9
             #endregion
 
             //var result = NumWays(5, GetMatrix("[[0,2],[2,1],[3,4],[2,3],[1,4],[2,0],[0,4]]"), 3);
-            var result = NumMovesStones(1,3,5);
-            TripleInOne ti = new TripleInOne(1);
-            ti.Push(0,1);
-            ti.Push(0, 2);
-            var reslt2=ti.Pop(0);
-            var reslt3 = ti.Pop(0);
+            //var result = NumMovesStones(1,3,5);
+            //TripleInOne ti = new TripleInOne(1);
+            //ti.Push(0,1);
+            //ti.Push(0, 2);
+            //var reslt2=ti.Pop(0);
+            //var reslt3 = ti.Pop(0);
+
+            var result = DaysBetweenDates("2020-01-15", "2019-01-15");
 
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
+
+
+
+        /// <summary>
+        ///https://leetcode-cn.com/problems/number-of-days-between-two-dates/  1360. 日期之间隔几天
+        /// </summary>
+        /// <param name="date1"></param>
+        /// <param name="date2"></param>
+        /// <returns></returns>
+        /// 
+        public static int[] DaysBetweenDates_Months = new int[] { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
+            DaysBetweenDates_days=new int[] { 365,366};
+        public static int DaysBetweenDates(String date1, String date2)
+        {
+         
+
+            string[] arr1 = date1.Split('-'),
+                      arr2=date2.Split('-');
+            int year1 = int.Parse(arr1[0]), month1 = int.Parse(arr1[1]),day1=int.Parse(arr1[2]),
+                year2 = int.Parse(arr2[0]), month2 = int.Parse(arr2[1]), day2 = int.Parse(arr2[2]);
+
+            int diff1 =  DaysBetweenDates_Gap(year1, month1, day1),
+                 diff2 = DaysBetweenDates_Gap(year2, month2, day2);
+
+            return Math.Abs(diff1-diff2);
+        }
+        public static int DaysBetweenDates_Gap(int year, int month, int day)
+        {
+            int sum = 0;
+            for (int i = 1971; i < year; i++)
+            {
+                sum += DaysBetweenDates_days[isLeapYear(i)];
+            }
+            int flag = isLeapYear(year);
+            for (int i = 0; i < month; i++)
+            {
+                if (i==2)
+                {
+                    sum += DaysBetweenDates_Months[i] + flag;
+                }
+                else
+                {
+                    sum += DaysBetweenDates_Months[i];
+                }
+            }
+            return sum + day;
+        }
+
+        public static int isLeapYear(int year)
+        {
+            return ((year % 100 != 0 && year % 4 == 0) || year % 400 == 0)?1:0;
+        }
+
         /// <summary>
         ///1033. 移动石子直到连续 https://leetcode-cn.com/problems/moving-stones-until-consecutive/
         /// </summary>
