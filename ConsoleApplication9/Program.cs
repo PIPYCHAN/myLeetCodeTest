@@ -870,14 +870,279 @@ namespace ConsoleApplication9
             //var reslt2=ti.Pop(0);
             //var reslt3 = ti.Pop(0);
 
-            var result = DaysBetweenDates("2020-01-15", "2019-01-15");
+            //var result = DaysBetweenDates("2020-01-15", "2019-01-15");
+            //var result = MostVisited(4, new int[] { 3, 1, 2, 3, 1 });
+            //var result = LeastMinutes(4);
+            //var result = MaxProductDifference(new int[] { 4, 2, 5, 9, 7, 4, 8 });
+            //var result = ReorderLogFiles(new string[] { "l5sh 6 3869 08 1295", "16o 94884717383724 9", "43 490972281212 3 51", "9 ehyjki ngcoobi mi", "2epy 85881033085988", "7z fqkbxxqfks f y dg", "9h4p 5 791738 954209", "p i hz uubk id s m l", "wd lfqgmu pvklkdp u", "m4jl 225084707500464", "6np2 bqrrqt q vtap h", "e mpgfn bfkylg zewmg", "ttzoz 035658365825 9", "k5pkn 88312912782538", "ry9 8231674347096 00", "w 831 74626 07 353 9", "bxao armngjllmvqwn q" });
+            //var result = CanBeIncreasing(new int[] {2,3,1,2});
+            //var result = FindCenter(GetMatrix("[[1,2],[2,3],[4,2]]"));
+            //var result = CountPoints(GetMatrix("[[1,3],[3,3],[5,3],[2,2]]"),GetMatrix("[[2,3,1],[4,3,1],[1,1,2]]"));
+            var result = BuildArray(new int[] {0, 2, 1, 5, 3, 4 });
 
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
+        /// <summary>
+        /// 5800. 基于排列构建数组 https://leetcode-cn.com/problems/build-array-from-permutation/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static  int[] BuildArray(int[] nums)
+        {
+            for (int i = 0; i < nums.Length; i++)
+            {
+                nums[i] += 1000 * (nums[nums[i]] % 1000);
+            }
+            for (int i = 0; i < nums.Length; i++)
+            {
+                nums[i] /= 1000;
+            }
+            return nums;
+                
+            //int[] res = new int[nums.Length] ;
+            //for (int i = 0; i < nums.Length; i++)
+            //{
+            //    res[i] = nums[nums[i]];
+            //}
+            //return res;
+        }
+        /// <summary>
+        ///1828. 统计一个圆中点的数目  https://leetcode-cn.com/problems/queries-on-number-of-points-inside-a-circle/
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="queries"></param>
+        /// <returns></returns>
+        public static  int[] CountPoints(int[][] points, int[][] queries)
+        {
+            int[] res = new int[queries.Length];
+            for (int j = 0; j < queries.Length; j++)
+            {
+               for (int i = 0; i < points.Length; i++)
+                    {
+                    int a = points[i][0], b = points[i][1],
+                        x = queries[j][0], y = queries[j][1], z = queries[j][2];
+                    if (Math.Sqrt(Math.Pow(Math.Abs(a-x),2)+ Math.Pow(Math.Abs(b - y), 2))<=z)
+                    {
+                        res[j]++;
+                    }
+                }
+            }
+            return res;
+        }
+        /// <summary>
+        /// 1791. 找出星型图的中心节点 https://leetcode-cn.com/problems/find-center-of-star-graph/
+        /// </summary>
+        /// <param name="edges"></param>
+        /// <returns></returns>
+        public static int FindCenter(int[][] edges)
+        {
+            if (edges[0][0]==edges[1][0]|| edges[0][0] == edges[1][1])
+            {
+                return edges[0][0];
+            }
+            else 
+            {
+                return edges[0][1];
+            }
+
+            //int n = edges.Length;
+            //Dictionary<int, int> dic = new Dictionary<int, int>();
+            //for (int i = 0; i < edges.Length; i++)
+            //{
+            //    for (int j = 0; j < edges[i].Length; j++)
+            //    {
+            //        if (dic.ContainsKey(edges[i][j]))
+            //        {
+            //            dic[edges[i][j]]++;
+            //        }
+            //        else
+            //        {
+            //            dic.Add(edges[i][j],1);
+            //        }
+            //    }
+            //}
+            //int res = -1;
+            //foreach (var key in dic.Keys)
+            //{
+            //    if (dic[key]==n)
+            //    {
+            //        return key;
+            //    }
+            //}
+            //return res;
+        }
+
+        /// <summary>
+        /// 1909. 删除一个元素使数组严格递增 https://leetcode-cn.com/problems/remove-one-element-to-make-the-array-strictly-increasing/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static bool CanBeIncreasing(int[] nums)
+        {
+            int decreaseCount = 0;
+            for (int i = 1; i < nums.Length&&decreaseCount<2; i++)
+            {
+                if (nums[i]<=nums[i-1])
+                {
+                    decreaseCount++;
+                    if (i-1>0&&nums[i]<=nums[i-2])
+                    {
+                        nums[i] = nums[i - 1];
+                    }
+                }
+            }
+            return decreaseCount < 2;
+        }
+
+        /// <summary>
+        /// 937. 重新排列日志文件 https://leetcode-cn.com/problems/reorder-data-in-log-files/
+        /// </summary>
+        /// <param name="logs"></param>
+        /// <returns></returns>
+        public static string[] ReorderLogFiles(string[] logs)
+        {
 
 
+            Array.Sort(logs, (a, b) =>
+            {
+
+                string[] arrA = a.Split(new char[] { ' ' }, 2);
+                string[] arrB = b.Split(new char[] { ' ' }, 2);
+                bool isADigit = Char.IsDigit(arrA[1][0]),
+                isBDigit = Char.IsDigit(arrB[1][0]);
+                if (!isADigit && !isBDigit)
+                {
+                    if (!arrA[1].Equals(arrB[1]))
+                    {
+                        return arrA[1].CompareTo(arrB[1]);
+                    }
+                    else
+                    {
+                        return arrA[0].CompareTo(arrB[0]);
+                    }
+                }
+                else if (isADigit && isBDigit)
+                {
+                    return 0;
+                }
+                else if (!isADigit)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            });
+            return logs;
+        }
+
+        /// <summary>
+        ///1913. 两个数对之间的最大乘积差 https://leetcode-cn.com/problems/maximum-product-difference-between-two-pairs/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int MaxProductDifference(int[] nums)
+        {
+            int max1 = -1, max2 = -2, min1 = int.MaxValue, min2 = int.MaxValue;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (nums[i]>max1)
+                {
+                    max2 = max1;
+                    max1 = nums[i];
+                }
+                else if (nums[i]>max2)
+                {
+                    max2 = nums[i];
+                }
+                 if (nums[i]<min1)
+                {
+                    min2 = min1;
+                    min1 = nums[i];
+                }
+                else if (nums[i]<min2)
+                {
+                    min2 = nums[i];
+                }
+            }
+            return max1 * max2 - min2 * min1;
+        }
+        /// <summary>
+        /// LCS 01. 下载插件 https://leetcode-cn.com/problems/Ju9Xwi/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int LeastMinutes(int n)
+        {
+            //DP
+            int[] dp = new int[n+1];
+            dp[1] = 1;
+            for (int i = 2; i < n+1; i++)
+            {
+                dp[i] = dp[(i+1)/ 2] + 1;
+            }
+            return dp[n];
+
+            //////Greedy Algorithms
+            //int bandwidth = 1, increaseTime = 0;
+            //while (n>0)
+            //{
+            //    if (n / bandwidth > 1)
+            //    {
+            //        bandwidth *= 2;
+            //    }
+            //    else
+            //    {
+            //        n -=bandwidth;
+            //    }
+            //    increaseTime++;
+            //}
+            //return increaseTime;
+            
+
+            ////Math
+            //int bandwidth = 1,increaseTime=0;
+            //while (bandwidth<n)
+            //{
+            //    bandwidth *= 2;
+            //    increaseTime++;
+            //}
+            //return increaseTime + 1;
+        }
+        /// <summary>
+        /// 1560. 圆形赛道上经过次数最多的扇区 https://leetcode-cn.com/problems/most-visited-sector-in-a-circular-track/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="rounds"></param>
+        /// <returns></returns>
+        public static IList<int> MostVisited(int n, int[] rounds)
+        {
+            List<int> ret = new List<int>();
+            int length = rounds.Length;
+            int start = rounds[0], end = rounds[length - 1];
+            if (start <= end)
+            {
+                for (int i = start; i <= end; i++)
+                {
+                    ret.Add(i);
+                }
+            }
+            else
+            { 
+                for (int i = 1; i <= end; i++)
+                {
+                    ret.Add(i);
+                }
+                for (int i = start; i <= n; i++)
+                {
+                    ret.Add(i);
+                }
+            }
+            return ret;
+        }
 
         /// <summary>
         ///https://leetcode-cn.com/problems/number-of-days-between-two-dates/  1360. 日期之间隔几天
