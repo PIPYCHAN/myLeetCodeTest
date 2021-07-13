@@ -24,4 +24,3 @@ E:\项目\ConsoleApplication9\ConsoleApplication9\bin\Debug\ConsoleApplication9.
 E:\项目\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.csproj.CoreCompileInputs.cache
 E:\项目\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.exe
 E:\项目\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.pdb
-E:\项目\ConsoleApplication9\ConsoleApplication9\obj\Debug\ConsoleApplication9.csprojAssemblyReference.cache

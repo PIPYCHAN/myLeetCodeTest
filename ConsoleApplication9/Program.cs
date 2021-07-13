@@ -878,18 +878,415 @@ namespace ConsoleApplication9
             //var result = CanBeIncreasing(new int[] {2,3,1,2});
             //var result = FindCenter(GetMatrix("[[1,2],[2,3],[4,2]]"));
             //var result = CountPoints(GetMatrix("[[1,3],[3,3],[5,3],[2,2]]"),GetMatrix("[[2,3,1],[4,3,1],[1,1,2]]"));
-            var result = BuildArray(new int[] {0, 2, 1, 5, 3, 4 });
+            //var result = BuildArray(new int[] {0, 2, 1, 5, 3, 4 });
+            //var result = GenerateParenthesis(2);
+            //var result = DeepestLeavesSum(ConvertTreeFromArray(new int?[] { 1, 2, 3, 4, 5, null, 6, 7, null, null, null, null, 8}));
+            //var result = IsDecomposable("00011111222");
+            //var result = Permute(new int[] { 1, 2, 3 });
+            //var result = SwapPairs(GenerateListNodeFromArray(new int[] { 1, 2, 3, 4 }));
+            //var result = UniquePaths(3, 7);
+            //var result = IntToRoman(1994);
+            var result = MinPathSum(GetMatrix("[[1,2,3],[4,5,6]]"));
 
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
         /// <summary>
+        ///64. 最小路径和  https://leetcode-cn.com/problems/minimum-path-sum/
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <returns></returns>
+        public static int MinPathSum(int[][] grid)
+        {
+            #region dp
+            ////dp
+            //int m = grid.Length, n = grid[0].Length;
+            //int[][] dp = new int[m][];
+            //for (int i = 0; i < dp.Length; i++)
+            //{
+            //    dp[i] = new int[n];
+            //}
+
+            //for (int i = 0; i < m; i++)
+            //{
+            //    for (int j = 0; j < n; j++)
+            //    {
+            //        if (i-1<0&&j-1<0)
+            //        {
+            //            dp[i][j] = grid[i][j];
+            //        }
+            //        else if (i-1>-1&&j-1>-1)
+            //        {
+            //            dp[i][j] = grid[i][j] + Math.Min(dp[i-1][j],dp[i][j-1]);
+            //        }
+            //        else
+            //        {
+            //            if (i - 1 > -1)
+            //            {
+            //                dp[i][j] += grid[i][j] + dp[i - 1][j];
+            //            }
+            //            else if (j - 1 > -1)
+            //            {
+            //                dp[i][j] += grid[i][j] + dp[i][j - 1];
+            //            }
+            //        }
+
+            //    }
+            //}
+            //return dp[m - 1][n - 1];
+            #endregion
+
+            ////DFS  memo
+            int m = grid.Length, n = grid[0].Length;
+            int[][] memoArr = new int[m][];
+            for (int i = 0; i < m; i++)
+            {
+                memoArr[i] = new int[n];
+            }
+            return MinPathSum_DFS(grid, m, n, 0, 0, memoArr);
+        }
+        public static int MinPathSum_DFS(int[][] grid, int m, int n, int x, int y, int[][] memo)
+        {
+            if (!(x < m && y < n))
+            {
+                return int.MaxValue;
+            }
+            if (x == m - 1 && y == n - 1)
+            {
+                return grid[x][y];
+            }
+
+            int right = x + 1 >= m ? int.MaxValue : (memo[x + 1][y] > 0 ? (memo[x + 1][y]) : MinPathSum_DFS(grid, m, n, x + 1, y, memo));
+            int down = y + 1 >= n ? int.MaxValue : (memo[x][y + 1] > 0 ? (memo[x][y + 1]) : MinPathSum_DFS(grid, m, n, x, y + 1, memo));
+            memo[x][y] = grid[x][y] + Math.Min(right, down);
+            return memo[x][y];
+
+        }
+        /// <summary>
+        /// 12. 整数转罗马数字 https://leetcode-cn.com/problems/integer-to-roman/
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string IntToRoman(int num)
+        {
+            int index = 0;
+            string[] romaArr = new string[] { "I", "V", "X", "L", "C", "D", "M" };
+            string res = "";
+            while (num > 0)
+            {
+                int curr = num % 10;
+                string currStr = "";
+                if (curr != 0)
+                {
+                    if (curr > 0 && curr < 4)
+                    {
+                        for (int i = 0; i < curr; i++)
+                        {
+                            currStr += romaArr[index];
+                        }
+                    }
+                    else if (curr == 4)
+                    {
+                        currStr += romaArr[index] + romaArr[index + 1];
+                    }
+                    else if (curr >= 5 && curr < 9)
+                    {
+                        currStr += romaArr[index + 1];
+                        if (curr > 5 && curr < 9)
+                        {
+                            for (int i = 0; i < curr - 5; i++)
+                            {
+                                currStr += romaArr[index];
+                            }
+                        }
+                    }
+                    else//9
+                    {
+                        currStr += romaArr[index] + romaArr[index + 2];
+                    }
+                    res = currStr + res;
+                }
+                index += 2;
+                num /= 10;
+            }
+            return res;
+
+
+        }
+        /// <summary>
+        /// 62. 不同路径 https://leetcode-cn.com/problems/unique-paths/
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static int UniquePaths(int m, int n)
+        {
+            int[][] dp = new int[m][];
+            for (int i = 0; i < dp.Length; i++)
+            {
+                dp[i] = new int[n];
+            }
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == 0 || j == 0)
+                    {
+                        dp[i][j] = 1;
+                    }
+                    else
+                    {
+                        //dp[i][j] += (i - 1 > -1 ? dp[i - 1][j] : 0) + ((j-1)>-1?dp[i][j-1]:0);
+                        dp[i][j] += dp[i - 1][j] + dp[i][j - 1];
+                    }
+
+                }
+            }
+            return dp[m - 1][n - 1];
+        }
+
+        /// <summary>
+        ///24. 两两交换链表中的节点  https://leetcode-cn.com/problems/swap-nodes-in-pairs/
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static ListNode SwapPairs(ListNode head)
+        {
+            if (head == null || head.next == null)
+                return head;
+            ListNode rest = head.next.next;
+            ListNode newHead = head.next;
+            newHead.next = head;
+            head.next = SwapPairs(rest);
+            return newHead;
+        }
+        /// <summary>
+        /// 46. 全排列 https://leetcode-cn.com/problems/permutations/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> PermuteLis;
+        public static IList<IList<int>> Permute(int[] nums)
+        {
+            int n = nums.Length;
+            if (n == 0)
+                return PermuteLis;
+
+            bool[] used = new bool[n];
+            PermuteLis = new List<IList<int>>();
+            Permute_DFS(new List<int> { }, used, nums, 0, nums.Length);
+            return PermuteLis;
+        }
+        public static void Permute_DFS(List<int> path, bool[] used, int[] nums, int currDepth, int n)
+        {
+            if (currDepth == n)
+            {
+                //List<int> temp = new List<int>();
+                //for (int i = 0; i < n; i++)
+                //{
+                //    temp.Add(path[i]);
+                //}
+                PermuteLis.Add(new List<int>(path));
+
+                return;
+            }
+            for (int i = 0; i < n; i++)
+            {
+                if (!used[i])
+                {
+                    used[i] = true;
+                    path.Add(nums[i]);
+                    Permute_DFS(path, used, nums, currDepth + 1, n);
+                    used[i] = false;
+                    path.Remove(nums[i]);
+                }
+            }
+
+        }
+        /// <summary>
+        ///5817. 判断字符串是否可分解为值均等的子串  https://leetcode-cn.com/problems/check-if-a-string-is-decomposble-to-value-equal-substrings/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static bool IsDecomposable(string s)
+        {
+            int i = 0, j = 1, twoCount = 0;
+            while (i < s.Length)
+            {
+                j = i + 1;
+                while (j < s.Length && s[i] == s[j])
+                    j++;
+                if ((j - i) % 3 == 1)
+                    return false;
+                else if ((j - i) % 3 == 2)
+                {
+                    twoCount++;
+                    if (twoCount > 1)
+                    {
+                        return false;
+                    }
+                }
+                i = j;
+            }
+            return twoCount == 1;
+        }
+        /// <summary>
+        /// 1302. 层数最深叶子节点的和 https://leetcode-cn.com/problems/deepest-leaves-sum/
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        /// 
+        public static int DeepestLeavesSum_Sum = 0;
+        public static int DeepestLeavesSum_MaxDepth = -1;
+        public static int DeepestLeavesSum(TreeNode root)
+        {
+
+            #region BFS 
+
+            //////BFS
+            //if (root == null)
+            //    return 0;
+
+            //int sum = 0;
+            //LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+            //queue.AddLast(root);
+            //while (queue.Count>0)
+            //{
+            //    int currCount = queue.Count();
+            //    sum = 0;
+            //    while (currCount>0)
+            //    {
+            //        TreeNode curr = queue.First();
+            //        queue.RemoveFirst();
+            //        sum +=curr.val;
+            //        if (curr.left!=null)
+            //        {
+            //            queue.AddLast(curr.left);
+            //        }
+            //        if (curr.right!=null)
+            //        {
+            //            queue.AddLast(curr.right);
+            //        }
+            //        currCount--;
+            //    }
+            //}
+            //return sum;
+            #endregion
+
+            DeepestLeavesSum_DFS2(root, 0);
+            return DeepestLeavesSum_Sum;
+
+
+            ////DFS
+            //int maxDepth = DeepestLeavesSum_GetDepth(root, 0);
+
+            //DeepestLeavesSum_DFS(root,1, maxDepth);
+
+
+            //return DeepestLeavesSum_Sum;
+        }
+        public static void DeepestLeavesSum_DFS2(TreeNode root, int currDepth)
+        {
+            if (root == null)
+            {
+                return;
+            }
+            if (currDepth > DeepestLeavesSum_MaxDepth)
+            {
+                DeepestLeavesSum_Sum = root.val;
+                DeepestLeavesSum_MaxDepth = currDepth;
+
+            }
+            else if (currDepth == DeepestLeavesSum_MaxDepth)
+            {
+                DeepestLeavesSum_Sum += root.val;
+            }
+            DeepestLeavesSum_DFS2(root.left, currDepth + 1);
+            DeepestLeavesSum_DFS2(root.right, currDepth + 1);
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static void DeepestLeavesSum_DFS(TreeNode root, int currDepth, int maxDepth)
+        {
+
+            if (root == null)
+            {
+                return;
+            }
+            if (currDepth == maxDepth)
+            {
+                DeepestLeavesSum_Sum += root.val;
+            }
+            DeepestLeavesSum_DFS(root.left, currDepth + 1, maxDepth);
+            DeepestLeavesSum_DFS(root.right, currDepth + 1, maxDepth);
+
+        }
+
+        public static int DeepestLeavesSum_GetDepth(TreeNode root, int currDepth)
+        {
+            if (root == null)
+            {
+                return currDepth;
+            }
+            currDepth++;
+            int leftDept = currDepth, rightDept = currDepth;
+
+            if (root.left != null)
+            {
+                leftDept = DeepestLeavesSum_GetDepth(root.left, leftDept);
+            }
+            if (root.right != null)
+            {
+                rightDept = DeepestLeavesSum_GetDepth(root.right, rightDept);
+            }
+            return Math.Max(leftDept, rightDept);
+        }
+
+
+        /// <summary>
+        /// 面试题 08.09. 括号 https://leetcode-cn.com/problems/bracket-lcci/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static IList<string> GenerateParenthesis(int n)
+        {
+            IList<string> res = new List<string>();
+
+            GenerateParenthesis_DFS(n, n, "", ref res);
+            return res;
+        }
+        public static void GenerateParenthesis_DFS(int lRemain, int rRemain, string path, ref IList<string> res)
+        {
+            if (lRemain == 0 && rRemain == 0)
+            {
+                res.Add(path);
+                return;
+            }
+            if (lRemain > rRemain)
+            {
+                return;
+            }
+            if (lRemain >= 0)
+            {
+                GenerateParenthesis_DFS(lRemain - 1, rRemain, path + "(", ref res);
+            }
+            if (0 < rRemain)
+            {
+                GenerateParenthesis_DFS(lRemain, rRemain - 1, path + ")", ref res);
+            }
+        }
+
+        /// <summary>
         /// 5800. 基于排列构建数组 https://leetcode-cn.com/problems/build-array-from-permutation/
         /// </summary>
         /// <param name="nums"></param>
         /// <returns></returns>
-        public static  int[] BuildArray(int[] nums)
+        public static int[] BuildArray(int[] nums)
         {
             for (int i = 0; i < nums.Length; i++)
             {
@@ -900,7 +1297,7 @@ namespace ConsoleApplication9
                 nums[i] /= 1000;
             }
             return nums;
-                
+
             //int[] res = new int[nums.Length] ;
             //for (int i = 0; i < nums.Length; i++)
             //{
@@ -914,16 +1311,16 @@ namespace ConsoleApplication9
         /// <param name="points"></param>
         /// <param name="queries"></param>
         /// <returns></returns>
-        public static  int[] CountPoints(int[][] points, int[][] queries)
+        public static int[] CountPoints(int[][] points, int[][] queries)
         {
             int[] res = new int[queries.Length];
             for (int j = 0; j < queries.Length; j++)
             {
-               for (int i = 0; i < points.Length; i++)
-                    {
+                for (int i = 0; i < points.Length; i++)
+                {
                     int a = points[i][0], b = points[i][1],
                         x = queries[j][0], y = queries[j][1], z = queries[j][2];
-                    if (Math.Sqrt(Math.Pow(Math.Abs(a-x),2)+ Math.Pow(Math.Abs(b - y), 2))<=z)
+                    if (Math.Sqrt(Math.Pow(Math.Abs(a - x), 2) + Math.Pow(Math.Abs(b - y), 2)) <= z)
                     {
                         res[j]++;
                     }
@@ -938,11 +1335,11 @@ namespace ConsoleApplication9
         /// <returns></returns>
         public static int FindCenter(int[][] edges)
         {
-            if (edges[0][0]==edges[1][0]|| edges[0][0] == edges[1][1])
+            if (edges[0][0] == edges[1][0] || edges[0][0] == edges[1][1])
             {
                 return edges[0][0];
             }
-            else 
+            else
             {
                 return edges[0][1];
             }
@@ -982,12 +1379,12 @@ namespace ConsoleApplication9
         public static bool CanBeIncreasing(int[] nums)
         {
             int decreaseCount = 0;
-            for (int i = 1; i < nums.Length&&decreaseCount<2; i++)
+            for (int i = 1; i < nums.Length && decreaseCount < 2; i++)
             {
-                if (nums[i]<=nums[i-1])
+                if (nums[i] <= nums[i - 1])
                 {
                     decreaseCount++;
-                    if (i-1>0&&nums[i]<=nums[i-2])
+                    if (i - 1 > 0 && nums[i] <= nums[i - 2])
                     {
                         nums[i] = nums[i - 1];
                     }
@@ -1049,21 +1446,21 @@ namespace ConsoleApplication9
             int max1 = -1, max2 = -2, min1 = int.MaxValue, min2 = int.MaxValue;
             for (int i = 0; i < nums.Length; i++)
             {
-                if (nums[i]>max1)
+                if (nums[i] > max1)
                 {
                     max2 = max1;
                     max1 = nums[i];
                 }
-                else if (nums[i]>max2)
+                else if (nums[i] > max2)
                 {
                     max2 = nums[i];
                 }
-                 if (nums[i]<min1)
+                if (nums[i] < min1)
                 {
                     min2 = min1;
                     min1 = nums[i];
                 }
-                else if (nums[i]<min2)
+                else if (nums[i] < min2)
                 {
                     min2 = nums[i];
                 }
@@ -1078,11 +1475,11 @@ namespace ConsoleApplication9
         public static int LeastMinutes(int n)
         {
             //DP
-            int[] dp = new int[n+1];
+            int[] dp = new int[n + 1];
             dp[1] = 1;
-            for (int i = 2; i < n+1; i++)
+            for (int i = 2; i < n + 1; i++)
             {
-                dp[i] = dp[(i+1)/ 2] + 1;
+                dp[i] = dp[(i + 1) / 2] + 1;
             }
             return dp[n];
 
@@ -1101,7 +1498,7 @@ namespace ConsoleApplication9
             //    increaseTime++;
             //}
             //return increaseTime;
-            
+
 
             ////Math
             //int bandwidth = 1,increaseTime=0;
@@ -1131,7 +1528,7 @@ namespace ConsoleApplication9
                 }
             }
             else
-            { 
+            {
                 for (int i = 1; i <= end; i++)
                 {
                     ret.Add(i);
@@ -1152,20 +1549,20 @@ namespace ConsoleApplication9
         /// <returns></returns>
         /// 
         public static int[] DaysBetweenDates_Months = new int[] { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
-            DaysBetweenDates_days=new int[] { 365,366};
+            DaysBetweenDates_days = new int[] { 365, 366 };
         public static int DaysBetweenDates(String date1, String date2)
         {
-         
+
 
             string[] arr1 = date1.Split('-'),
-                      arr2=date2.Split('-');
-            int year1 = int.Parse(arr1[0]), month1 = int.Parse(arr1[1]),day1=int.Parse(arr1[2]),
+                      arr2 = date2.Split('-');
+            int year1 = int.Parse(arr1[0]), month1 = int.Parse(arr1[1]), day1 = int.Parse(arr1[2]),
                 year2 = int.Parse(arr2[0]), month2 = int.Parse(arr2[1]), day2 = int.Parse(arr2[2]);
 
-            int diff1 =  DaysBetweenDates_Gap(year1, month1, day1),
+            int diff1 = DaysBetweenDates_Gap(year1, month1, day1),
                  diff2 = DaysBetweenDates_Gap(year2, month2, day2);
 
-            return Math.Abs(diff1-diff2);
+            return Math.Abs(diff1 - diff2);
         }
         public static int DaysBetweenDates_Gap(int year, int month, int day)
         {
@@ -1177,7 +1574,7 @@ namespace ConsoleApplication9
             int flag = isLeapYear(year);
             for (int i = 0; i < month; i++)
             {
-                if (i==2)
+                if (i == 2)
                 {
                     sum += DaysBetweenDates_Months[i] + flag;
                 }
@@ -1191,7 +1588,7 @@ namespace ConsoleApplication9
 
         public static int isLeapYear(int year)
         {
-            return ((year % 100 != 0 && year % 4 == 0) || year % 400 == 0)?1:0;
+            return ((year % 100 != 0 && year % 4 == 0) || year % 400 == 0) ? 1 : 0;
         }
 
         /// <summary>
@@ -5621,15 +6018,7 @@ namespace ConsoleApplication9
         }
 
 
-        /// <summary>
-        /// https://leetcode-cn.com/problems/bracket-lcci/ 面试题 08.09. 括号
-        /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        public static IList<string> GenerateParenthesis(int n)
-        {
-            return null;
-        }
+
         /// <summary>
         /// https://leetcode-cn.com/problems/largest-unique-number/  1133. 最大唯一数
         /// </summary>
@@ -20259,7 +20648,7 @@ namespace ConsoleApplication9
         int[] top;
         public TripleInOne(int stackSize)
         {
-            stack = new int[stackSize*3];
+            stack = new int[stackSize * 3];
             top = new int[3];
             for (int i = 0; i < 3; i++)
             {
@@ -20280,9 +20669,9 @@ namespace ConsoleApplication9
         public int Pop(int stackNum)
         {
 
-            if (top[stackNum]<3)
+            if (top[stackNum] < 3)
             {
-                return  -1;
+                return -1;
             }
             top[stackNum] -= 3;
             return stack[top[stackNum]];
@@ -20295,12 +20684,12 @@ namespace ConsoleApplication9
             {
                 return -1;
             }
-            return stack[top[stackNum]-3];
+            return stack[top[stackNum] - 3];
         }
 
         public bool IsEmpty(int stackNum)
         {
-            return top[stackNum]-3 < 0;
+            return top[stackNum] - 3 < 0;
         }
     }
 
