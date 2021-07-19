@@ -39,6 +39,34 @@ namespace ConsoleApplication9
         static void Main(string[] args)
         {
             #region old
+            //var result = NumWays(5, GetMatrix("[[0,2],[2,1],[3,4],[2,3],[1,4],[2,0],[0,4]]"), 3);
+            //var result = NumMovesStones(1,3,5);
+            //TripleInOne ti = new TripleInOne(1);
+            //ti.Push(0,1);
+            //ti.Push(0, 2);
+            //var reslt2=ti.Pop(0);
+            //var reslt3 = ti.Pop(0);
+
+            //var result = DaysBetweenDates("2020-01-15", "2019-01-15");
+            //var result = MostVisited(4, new int[] { 3, 1, 2, 3, 1 });
+            //var result = LeastMinutes(4);
+            //var result = MaxProductDifference(new int[] { 4, 2, 5, 9, 7, 4, 8 });
+            //var result = ReorderLogFiles(new string[] { "l5sh 6 3869 08 1295", "16o 94884717383724 9", "43 490972281212 3 51", "9 ehyjki ngcoobi mi", "2epy 85881033085988", "7z fqkbxxqfks f y dg", "9h4p 5 791738 954209", "p i hz uubk id s m l", "wd lfqgmu pvklkdp u", "m4jl 225084707500464", "6np2 bqrrqt q vtap h", "e mpgfn bfkylg zewmg", "ttzoz 035658365825 9", "k5pkn 88312912782538", "ry9 8231674347096 00", "w 831 74626 07 353 9", "bxao armngjllmvqwn q" });
+            //var result = CanBeIncreasing(new int[] {2,3,1,2});
+            //var result = FindCenter(GetMatrix("[[1,2],[2,3],[4,2]]"));
+            //var result = CountPoints(GetMatrix("[[1,3],[3,3],[5,3],[2,2]]"),GetMatrix("[[2,3,1],[4,3,1],[1,1,2]]"));
+            //var result = BuildArray(new int[] {0, 2, 1, 5, 3, 4 });
+            //var result = GenerateParenthesis(2);
+            //var result = DeepestLeavesSum(ConvertTreeFromArray(new int?[] { 1, 2, 3, 4, 5, null, 6, 7, null, null, null, null, 8}));
+            //var result = IsDecomposable("00011111222");
+            //var result = Permute(new int[] { 1, 2, 3 });
+            //var result = SwapPairs(GenerateListNodeFromArray(new int[] { 1, 2, 3, 4 }));
+            //var result = UniquePaths(3, 7);
+            //var result = IntToRoman(1994);
+            //var result = MinPathSum(GetMatrix("[[1,2,3],[4,5,6]]"));
+            //var result = CanJump(new int[] { 2, 3, 1, 1, 4 });
+            //var result=Subsets(new int[] { 1,2,3});
+            //var result = CombinationSum(new int[] { 2, 3, 5 }, 8);
             //var result = LastRemaining(5,3);
             //var result = PaintingPlan(3, 8);
             //var result = NearestValidPoint(3,4,GetMatrix(" [[1,2],[3,1],[2,4],[2,3],[4,4]]"));
@@ -862,35 +890,232 @@ namespace ConsoleApplication9
 
             #endregion
 
-            //var result = NumWays(5, GetMatrix("[[0,2],[2,1],[3,4],[2,3],[1,4],[2,0],[0,4]]"), 3);
-            //var result = NumMovesStones(1,3,5);
-            //TripleInOne ti = new TripleInOne(1);
-            //ti.Push(0,1);
-            //ti.Push(0, 2);
-            //var reslt2=ti.Pop(0);
-            //var reslt3 = ti.Pop(0);
 
-            //var result = DaysBetweenDates("2020-01-15", "2019-01-15");
-            //var result = MostVisited(4, new int[] { 3, 1, 2, 3, 1 });
-            //var result = LeastMinutes(4);
-            //var result = MaxProductDifference(new int[] { 4, 2, 5, 9, 7, 4, 8 });
-            //var result = ReorderLogFiles(new string[] { "l5sh 6 3869 08 1295", "16o 94884717383724 9", "43 490972281212 3 51", "9 ehyjki ngcoobi mi", "2epy 85881033085988", "7z fqkbxxqfks f y dg", "9h4p 5 791738 954209", "p i hz uubk id s m l", "wd lfqgmu pvklkdp u", "m4jl 225084707500464", "6np2 bqrrqt q vtap h", "e mpgfn bfkylg zewmg", "ttzoz 035658365825 9", "k5pkn 88312912782538", "ry9 8231674347096 00", "w 831 74626 07 353 9", "bxao armngjllmvqwn q" });
-            //var result = CanBeIncreasing(new int[] {2,3,1,2});
-            //var result = FindCenter(GetMatrix("[[1,2],[2,3],[4,2]]"));
-            //var result = CountPoints(GetMatrix("[[1,3],[3,3],[5,3],[2,2]]"),GetMatrix("[[2,3,1],[4,3,1],[1,1,2]]"));
-            //var result = BuildArray(new int[] {0, 2, 1, 5, 3, 4 });
-            //var result = GenerateParenthesis(2);
-            //var result = DeepestLeavesSum(ConvertTreeFromArray(new int?[] { 1, 2, 3, 4, 5, null, 6, 7, null, null, null, null, 8}));
-            //var result = IsDecomposable("00011111222");
-            //var result = Permute(new int[] { 1, 2, 3 });
-            //var result = SwapPairs(GenerateListNodeFromArray(new int[] { 1, 2, 3, 4 }));
-            //var result = UniquePaths(3, 7);
-            //var result = IntToRoman(1994);
-            var result = MinPathSum(GetMatrix("[[1,2,3],[4,5,6]]"));
-
+            //var result = Combine(4,2);
+            //var result = CombinationSum2(new int[] { 2, 5, 2, 1, 2 },5);
+            var result = CombinationSum3(3,7);
 
             Console.WriteLine("end");
             Console.ReadKey();
+        }
+
+
+        /// <summary>
+        /// 216. 组合总和 III https://leetcode-cn.com/problems/combination-sum-iii/
+        /// </summary>
+        /// <param name="k"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> CombinationSum3(int k, int n)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            IList<int> tmpLis = new List<int>();
+            int[] arr = new int[] { 1,2,3,4,5,6,7,8,9};
+            CombinationSum3_DFS(arr,0,k, n,0,res,tmpLis);
+            return res;
+        }
+        public static void CombinationSum3_DFS(int[] arr,int sum,int k, int n, int start,IList<IList<int>> res, IList<int> tmpLis)
+        {
+            if (tmpLis.Count>k)
+            {
+                return;
+            }
+            if (tmpLis.Count==k&&sum==n)
+            {
+                res.Add(new List<int>(tmpLis));
+            }
+            for (int i = start; i < arr.Length&&tmpLis.Count<k&&sum<n; i++)
+            {
+                sum += arr[i];
+                tmpLis.Add(arr[i]);
+                CombinationSum3_DFS(arr,sum,k,n, i + 1,res,tmpLis);
+                tmpLis.Remove(arr[i]);
+                sum -= arr[i];
+            }
+        }
+        /// <summary>
+        ///40. 组合总和 II https://leetcode-cn.com/problems/combination-sum-ii/
+        /// </summary>
+        /// <param name="candidates"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> CombinationSum2(int[] candidates, int target)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            List<int> tmpLis = new List<int>();
+            Array.Sort(candidates);
+            CombinationSum2_DFS(candidates,target,0,0,tmpLis,res);
+            return res;
+        }
+        public static void CombinationSum2_DFS(int[] candidates, int target,int start,int sum, List<int> tmpLis, IList<IList<int>> res)
+        {
+            if (sum==target)
+            {
+                res.Add(new List<int>(tmpLis));
+                return;
+            }
+            if (sum>target)
+            {
+                return;
+            }
+            for (int i =start; i < candidates.Length; i++)
+            {
+                if (i>start&& candidates[i]==candidates[i-1])
+                {
+                    continue;
+                }
+                tmpLis.Add(candidates[i]);
+                sum += candidates[i];
+                CombinationSum2_DFS(candidates,target,i+1,sum,tmpLis,res);
+                tmpLis.Remove(candidates[i]);
+                sum -= candidates[i];
+            }
+        }
+
+        /// <summary>
+        ///77. 组合 https://leetcode-cn.com/problems/combinations/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> Combine(int n, int k)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            List<int> tmpLis = new List<int>();
+            Combine_DFS(n,k,1,tmpLis,res);
+            return res;
+        }
+
+        public static void Combine_DFS(int n, int k,int begin,List<int> tmpList,IList<IList<int>> res)
+        {
+            if (tmpList.Count==k)
+            {
+                res.Add(new List<int>(tmpList));
+            }
+            if (tmpList.Count>k)
+            {
+                return;
+            }
+            for (int i = begin; i < n - (k - tmpList.Count) +1; i++)
+            {
+                tmpList.Add(i);
+                    
+                string tmp = "";
+                for (int g = 0; g < tmpList.Count; g++)
+                {
+                    tmp += tmpList[g] +",";
+                }
+                Console.WriteLine("前："+tmp);
+
+
+                Combine_DFS( n,k,i+1,tmpList,res);
+    
+                tmpList.Remove(i);
+
+                tmp = "";
+                for (int g = 0; g < tmpList.Count; g++)
+                {
+                    tmp += tmpList[g] + ",";
+                }
+                Console.WriteLine("后：" + tmp);
+            }
+        }
+
+        /// <summary>
+        /// 测试引用类型
+        /// </summary>
+        public static void testA()
+        {
+            List<int> lis = new List<int>();
+            string str = "";
+            int ii = 3;
+            testB(lis,str,ii);
+        }
+        public static void testB(List<int> lis,string str,int ii)
+        {
+            lis.Add(2);
+            str = "1";
+            ii = 88;
+        }
+        /// <summary>
+        ///39. 组合总和 https://leetcode-cn.com/problems/combination-sum/
+        /// </summary>
+        /// <param name="candidates"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+
+        public static IList<IList<int>> CombinationSum(int[] candidates, int target)
+        {
+            IList<IList<int>> CombinationSum_Res= new List<IList<int>>();
+            Array.Sort(candidates);
+            List<int> tmpList = new List<int>();
+            CombinationSum_DFS(CombinationSum_Res,candidates,tmpList,target,0);
+            return CombinationSum_Res;
+
+        }
+
+        public static void CombinationSum_DFS(IList<IList<int>> res, int[] candidates, List<int> tmpList, int target,int start )
+        {
+            if (target<0)
+            {
+                return;
+            }
+            if (target==0)
+            {
+                res.Add(new List<int>( tmpList));
+                return;
+            }
+
+            for (int i = start; i < candidates.Length; i++)
+            {
+                if (candidates[i]>target)
+                {
+                    break;
+                }
+                tmpList.Add(candidates[i]);
+                CombinationSum_DFS(res,candidates,tmpList,target-candidates[i],i);
+                tmpList.Remove(candidates[i]);
+            }
+        }
+        /// <summary>
+        ///78. 子集  https://leetcode-cn.com/problems/subsets/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> Subsets_res;
+        public static IList<IList<int>> Subsets(int[] nums)
+        {
+            
+            Subsets_res = new List<IList<int>>();
+            List<int> temp = new List<int>();
+            Subsets_DFS(nums,0,temp);
+            return Subsets_res;
+        }
+        public static void Subsets_DFS(int[] nums,int start,List<int> temp)
+        {
+            Subsets_res.Add(new List<int>(temp) );
+            for (int i = start; i < nums.Length; i++)
+            {
+                temp.Add(nums[i]);
+                Subsets_DFS(nums,i+1,temp);
+                temp.Remove(nums[i]);
+            }
+        }
+        /// <summary>
+        /// 55. 跳跃游戏 https://leetcode-cn.com/problems/jump-game/
+        /// </summary>
+        /// <returns></returns>
+        public static bool CanJump(int[] nums)
+        {
+            int distance = nums[0];
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (i<=distance)
+                {
+                    distance = Math.Max(distance,nums[i]+i);
+                }
+            }
+            return distance+1 >= nums.Length;
         }
         /// <summary>
         ///64. 最小路径和  https://leetcode-cn.com/problems/minimum-path-sum/
