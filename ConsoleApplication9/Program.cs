@@ -893,10 +893,266 @@ namespace ConsoleApplication9
 
             //var result = Combine(4,2);
             //var result = CombinationSum2(new int[] { 2, 5, 2, 1, 2 },5);
-            var result = CombinationSum3(3,7);
-
+            //var result = CombinationSum3(3,7);
+            //var result = PermuteUnique(new int[] { 2,2,1,1 });;
+            //var rewsult = NumTilePossibilities("AAABBC");
+            //var result = Permutation2("qqe");
+            //var result = Partition3("aab");
+            //var result = LetterCasePermutation("ab");
+            var result = Permutation4("abc");
             Console.WriteLine("end");
             Console.ReadKey();
+        }
+        public static string[] Permutation4(string s)
+        {
+            List<string> res = new List<string>();
+            LinkedList<char> path = new LinkedList<char>();
+            bool[] used = new bool[s.Length];
+            Permutation4_DFS(s,res,path,used);
+            return res.ToArray();
+        }
+        public static void Permutation4_DFS(string s, List<string> res, LinkedList<char> path, bool[] used)
+        {
+            if (path.Count==s.Length)
+            {
+                res.Add(new String(path.ToArray()));
+                return;
+            }
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (used[i])
+                {
+                    continue;
+                }
+                path.AddLast(s[i]);
+                used[i] = true;
+                Permutation4_DFS(s,res,path,used);
+                used[i] = false;
+                path.RemoveLast();
+            }
+        }
+        /// <summary>
+        ///784. 字母大小写全排列 https://leetcode-cn.com/problems/letter-case-permutation/
+        /// </summary>
+        /// <param name="S"></param>
+        /// <returns></returns>
+        public static IList<string> LetterCasePermutation(string S)
+        {
+            char[] arr = S.ToCharArray();
+            IList<string> res = new List<string>();
+            LinkedList<char> path = new LinkedList<char>();
+            LetterCasePermutation_DFS(arr,res,0);
+            return res;
+        }
+        public static void LetterCasePermutation_DFS(char[] arr, IList<string> res, int index)
+        {
+            if (index == arr.Length)
+            {
+                res.Add(new String(arr));
+                return;
+            }
+            LetterCasePermutation_DFS(arr, res, index + 1);
+            if (!(arr[index] <= '9' && arr[index] >= '0'))
+            {
+                if (arr[index] >= 'a' && arr[index] <= 'z')
+                    arr[index] = (char)(arr[index] + ('A' - 'a'));
+                else
+                    arr[index] = (char)(arr[index] - ('A' - 'a'));
+
+                LetterCasePermutation_DFS(arr, res, index + 1);
+            }
+        }
+        /// <summary>
+        ///131. 分割回文串 https://leetcode-cn.com/problems/palindrome-partitioning/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static IList<IList<string>> Partition3(string s)
+        {
+            char[] arr = s.ToCharArray();
+            
+            IList<IList<string>> res = new List<IList<string>>();
+            LinkedList<string> path = new LinkedList<string>();
+            Partition3_DFS(arr,res,path,0);
+            return res;
+        }
+        public static void  Partition3_DFS(char[] arr , IList<IList<string>> res, LinkedList<string> path,int start)
+        {
+            if (start == arr.Length)
+            {
+                //res.Add(new List<string>(path.ToArray()));
+                res.Add(new List<string>(path));
+                return;
+            }
+            for (int i = start; i < arr.Length; i++)
+            {
+                if (Partition3_IsPalind(arr,start,i))
+                {
+                    path.AddLast(new String(arr,start,i-start+1));
+                    Partition3_DFS(arr,res,path,i+1);
+                    path.RemoveLast();
+                }
+            }
+        }
+        public static bool Partition3_IsPalind(char[] arr,int left,int right)
+        {
+            while (left<right)
+            {
+                if (arr[left]!=arr[right])
+                {
+                    return false;
+                }
+                left ++;
+                right--;
+            }
+            return true;
+        }
+        /// <summary>
+        /// 面试题 08.08. 有重复字符串的排列组合 https://leetcode-cn.com/problems/permutation-ii-lcci/
+        /// </summary>
+        /// <param name="S"></param>
+        /// <returns></returns>
+        public static string[] Permutation2(string S)
+        {
+            char[] arr = S.ToCharArray();
+            Array.Sort(arr);
+            bool[] used = new bool[arr.Length];
+            List<string> res = new List<string>();
+            LinkedList<char> path = new LinkedList<char>();
+            Permutation2_DFS(arr, res,path,used);
+            return res.ToArray();
+        }
+        public static void Permutation2_DFS(char[] arr, List<string> res, LinkedList<char> path, bool[] used)
+        {
+
+            if (path.Count == arr.Length)
+            {
+                res.Add(new String(path.ToArray()));
+                return;
+            }
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (used[i])
+                {
+                    continue;
+                }
+
+                if (i > 0 && arr[i] == arr[i - 1] && used[i - 1])
+                {
+                    continue;
+                }
+                path.AddLast(arr[i]);
+                used[i] = true;
+                Permutation2_DFS(arr, res, path, used);
+                used[i] = false;
+                path.RemoveLast();
+            }
+        }
+        /// <summary>
+        /// 1079. 活字印刷 https://leetcode-cn.com/problems/letter-tile-possibilities/
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <returns></returns>
+        public static int NumTilePossibilities(string tiles)
+        {
+            int n = tiles.Length;
+            char[] tilesArr = tiles.ToCharArray();
+            Array.Sort(tilesArr);
+            bool[] used = new bool[n];
+            LinkedList<char> path = new LinkedList<char>();
+            IList<IList<char>> res = new List<IList<char>>();
+            int[] count = new int[1];
+            NumTilePossibilities_DFS(tilesArr, 0,0,used,path, res, count);
+            return count[0];
+
+        }
+        public static void NumTilePossibilities_DFS(char[] tiles,int start,int depth,bool[] used, LinkedList<char> path, IList<IList<char>> res,int[] count)
+        {
+  
+ 
+            if (depth> tiles.Length)
+            {
+                return;
+            }
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                if (used[i] || (i-1 >= 0 && tiles[i] == tiles[i - 1] && !used[i - 1]))
+                {
+                    continue;
+                }
+
+                count[0]++;
+
+                path.AddLast(tiles[i]);
+                res.Add(new List<char>(path));
+                
+                used[i] = true;
+                NumTilePossibilities_DFS(tiles, i, depth + 1, used, path, res, count);
+                used[i] = false;
+
+                path.RemoveLast();
+            }
+        }
+        /// <summary>
+        /// 47. 全排列 II https://leetcode-cn.com/problems/permutations-ii/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> PermuteUnique(int[] nums)
+        {
+            int len = nums.Length;
+            IList<IList<int>> res = new List<IList<int>>();
+            if (len == 0)
+            {
+                return res;
+            }
+
+            // 排序（升序或者降序都可以），排序是剪枝的前提
+            Array.Sort(nums);
+
+            bool[] used = new bool[len];
+            // 使用 Deque 是 Java 官方 Stack 类的建议
+            LinkedList<int> path = new LinkedList<int>();
+            PermuteUnique_DFS(nums, nums.Length, 0, used, new List<int>(), res);
+            return res;
+            //IList<IList<int>> res = new List<IList<int>>();
+            //IList<int> tmpLis = new List<int>();
+            //Array.Sort(nums);
+            //bool[] used = new bool[nums.Length];
+            //PermuteUnique_DFS(nums,res,tmpLis,used,0);
+            //return res;
+
+        }
+        private static void PermuteUnique_DFS(int[] nums, int len, int depth, bool[] used, List<int> path, IList<IList<int>> res)
+        {
+            if (depth == len)
+            {
+                res.Add(new List<int>(path));
+                return;
+            }
+
+            for (int i = 0; i < nums.Length; ++i)
+            {
+                if (used[i])
+                {
+                    continue;
+                }
+
+                // 剪枝条件：i > 0 是为了保证 nums[i - 1] 有意义
+                // 写 !used[i - 1] 是因为 nums[i - 1] 在深度优先遍历的过程中刚刚被撤销选择
+                if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1])
+                {
+                    continue;
+                }
+
+                path.Add(nums[i]);
+                used[i] = true;
+
+                PermuteUnique_DFS(nums, nums.Length, depth + 1, used, path, res);
+                // 回溯部分的代码，和 dfs 之前的代码是对称的
+                used[i] = false;
+                path.RemoveAt(path.Count-1);
+            }
         }
 
 
