@@ -899,21 +899,330 @@ namespace ConsoleApplication9
             //var result = Permutation2("qqe");
             //var result = Partition3("aab");
             //var result = LetterCasePermutation("ab");
-            var result = Permutation4("abc");
+            //var result = Permutation4("abc");
+            //var result = SubsetsWithDup(new int[] { 0 });
+            //var result = PathSum(ConvertTreeFromArray(new int?[] { 5, 4, 8, 11, null, 13, 4, 7, 2, null, null, 5, 1 }),22);
+            //var result = Subsets2(new int[] {1,2,3 });
+
+            //var result = Exist(GetMatrixChar("[[A,B,C,E],[S,F,C,S],[A,D,E,E]]"),"SEE");
+            //var result = RestoreIpAddresses("25525511135");
+            //var result = FindTargetSumWays(new int[] { 1000},1000);
+            var result = Exist2(GetMatrixChar("[['A','B','C','E'],['S','F','C','S'],['A','D','E','E']]"), "ABCCED");
+
             Console.WriteLine("end");
             Console.ReadKey();
         }
+
+        /// <summary>
+        /// 剑指 Offer 12. 矩阵中的路径 https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        public static bool Exist2(char[][] board, string word)
+        {
+            int m = board.Length, n = board[0].Length;
+            int[] direX = new int[] { 0, 1, 0, -1 };
+            int[] direY = new int[] { 1, 0, -1, 0 };
+            bool[][] used = new bool[m][];
+            for (int i = 0; i < m; i++)
+            {
+                used[i] = new bool[n];
+            }
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (Exist2_DFS(board, word, i, j, direX, direY, 0,used))
+                        return true;
+                }
+            }
+            return false;
+        }
+        public static bool Exist2_DFS(char[][] board, string word, int row, int col, int[] direX, int[] direY, int currIndex,bool[][] used)
+        {
+            if (used[row][col])
+            {
+                return false;
+            }
+            if (board[row][col] == word[currIndex])
+            {
+                if (currIndex == word.Length - 1)
+                {
+                    return true;
+                }
+                used[row][col] = true;
+                for (int i = 0; i < 4; i++)
+                {
+                    int newRow = row + direY[i], newCol = col + direX[i];
+                    if (newRow > -1 && newRow < board.Length && newCol > -1 && newCol < board[0].Length && board[newRow][newCol] == word[currIndex+1])
+                    {
+                        
+                        if (Exist2_DFS(board, word, newRow, newCol, direX, direY, currIndex+1,used))
+                            return true;
+                      
+                    }
+                }
+                used[row][col] = false;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 494. 目标和 https://leetcode-cn.com/problems/target-sum/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static int FindTargetSumWays(int[] nums, int target)
+        {
+            int[] res = new int[1];
+            bool[] used = new bool[nums.Length];
+            FindTargetSumWays_DFS(nums, target, 0, res, 0);
+            return res[0];
+        }
+        public static void FindTargetSumWays_DFS(int[] nums, int target, int currSum, int[] res, int start)
+        {
+            if (start == nums.Length)
+            {
+                if (target == currSum)
+                    res[0]++;
+                return;
+            }
+            //+
+            currSum += nums[start];
+            FindTargetSumWays_DFS(nums, target, currSum, res, start + 1);
+            currSum -= nums[start];
+
+            //-
+            currSum -= nums[start];
+            FindTargetSumWays_DFS(nums, target, currSum, res, start + 1);
+            currSum += nums[start];
+
+        }
+        /// <summary>
+        /// 93. 复原 IP 地址 https://leetcode-cn.com/problems/restore-ip-addresses/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static IList<string> RestoreIpAddresses(string s)
+        {
+
+            IList<string> res = new List<string>();
+            IList<string> tmp = new List<string>();
+            if (s.Length < 4 || s.Length > 12)
+            {
+                return res;
+            }
+            RestoreIpAddresses_DFS(s, res, tmp, 0);
+
+            return res;
+
+        }
+        public static void RestoreIpAddresses_DFS(string s, IList<string> res, IList<string> tmp, int start)
+        {
+            if (tmp.Count == 4)
+            {
+                if (start == s.Length)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < tmp.Count; i++)
+                    {
+                        sb.Append(tmp[i] + ".");
+                    }
+                    res.Add(sb.ToString().TrimEnd('.'));
+                }
+
+                return;
+            }
+            for (int i = 1; i <= 3; i++)
+            {
+                //保证后续s.substring(begin,begin+len)合法
+                if (start + i - 1 >= s.Length)
+                {
+                    return;
+                }
+                //剔除不合法的前导0
+                if (i != 1 && s[start] == '0')
+                {
+                    return;
+                }
+                //截取字符串
+                String st = s.Substring(start, i);
+                //截取的字符串长度为3时，大小不能超过255
+                if (i == 3 && int.Parse(st) > 255)
+                {
+                    return;
+                }
+                tmp.Add(st);
+                RestoreIpAddresses_DFS(s, res, tmp, start + i);
+                tmp.RemoveAt(tmp.Count - 1);
+            }
+
+        }
+        /// <summary>
+        /// 79. 单词搜索 https://leetcode-cn.com/problems/word-search/
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        public static bool Exist(char[][] board, string word)
+        {
+            int m = board.Length, n = board[0].Length;
+            int[] direX = new int[] { 0, 1, 0, -1 };
+            int[] direY = new int[] { -1, 0, 1, 0 };
+            bool[][] visited = new bool[m][];
+            for (int i = 0; i < m; i++)
+            {
+                visited[i] = new bool[n];
+            }
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (Exist_DFS(board, word, i, j, direX, direY, 0, visited))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public static bool Exist_DFS(char[][] board, string word, int row, int col, int[] direX, int[] direY, int index, bool[][] visited)
+        {
+            if (board[row][col] != word[index])
+            {
+                return false;
+            }
+            if (index == word.Length - 1)
+            {
+                return true;
+            }
+            visited[row][col] = true;
+            for (int i = 0; i < 4; i++)
+            {
+                int newRow = row + direY[i],
+                    newCol = col + direX[i];
+                if (newRow > -1 && newRow < board.Length && newCol > -1 && newCol < board[0].Length && !visited[newRow][newCol])
+                {
+                    if (Exist_DFS(board, word, newRow, newCol, direX, direY, index + 1, visited))
+                    {
+                        return true;
+                    }
+                }
+            }
+            visited[row][col] = false;
+            return false;
+        }
+
+        /// <summary>
+        /// 面试题 08.04. 幂集 https://leetcode-cn.com/problems/power-set-lcci/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> Subsets2(int[] nums)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            IList<int> path = new List<int>();
+            Subsets_DFS(nums, res, path, 0);
+            return res;
+        }
+        public static void Subsets_DFS(int[] nums, IList<IList<int>> res, IList<int> path, int start)
+        {
+            res.Add(new List<int>(path));
+            if (path.Count == nums.Length)
+                return;
+
+            for (int i = start; i < nums.Length; i++)
+            {
+
+                path.Add(nums[i]);
+                Subsets_DFS(nums, res, path, i + 1);
+                path.Remove(nums[i]);
+            }
+
+        }
+        /// <summary>
+        ///113. 路径总和 II  https://leetcode-cn.com/problems/path-sum-ii/
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="targetSum"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> PathSum(TreeNode root, int targetSum)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            IList<int> path = new List<int>();
+            PathSum_DFS(root, targetSum, res, path, 0);
+            return res;
+
+        }
+        public static void PathSum_DFS(TreeNode root, int targetSum, IList<IList<int>> res, IList<int> path, int currSum)
+        {
+            if (root == null)
+            {
+                return;
+            }
+            path.Add(root.val);
+            currSum += root.val;
+
+            if (root.left == null && root.right == null)
+            {
+                if (currSum == targetSum)
+                {
+                    res.Add(new List<int>(path));
+                }
+                path.RemoveAt(path.Count - 1);
+                currSum -= root.val;
+                return;
+            }
+            PathSum_DFS(root.left, targetSum, res, path, currSum);
+            PathSum_DFS(root.right, targetSum, res, path, currSum);
+
+            path.RemoveAt(path.Count - 1);
+            currSum -= root.val;
+        }
+        /// <summary>
+        ///90. 子集 II  https://leetcode-cn.com/problems/subsets-ii/
+        /// </summary>
+        /// <param name="nums"></param>
+        public static IList<IList<int>> SubsetsWithDup(int[] nums)
+        {
+            Array.Sort(nums);
+            IList<IList<int>> res = new List<IList<int>>();
+            LinkedList<int> path = new LinkedList<int>();
+            bool[] used = new bool[nums.Length];
+            SubsetsWithDup_DFS(nums, res, path, 0, used);
+
+            return res;
+        }
+        public static void SubsetsWithDup_DFS(int[] nums, IList<IList<int>> res, LinkedList<int> path, int start, bool[] used)
+        {
+            res.Add(new List<int>(path));
+
+            for (int i = start; i < nums.Length; i++)
+            {
+                if (used[i] || (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]))
+                {
+                    continue;
+                }
+                path.AddLast(nums[i]);
+                used[i] = true;
+                SubsetsWithDup_DFS(nums, res, path, i + 1, used);
+                path.RemoveLast();
+                used[i] = false;
+            }
+        }
+
         public static string[] Permutation4(string s)
         {
             List<string> res = new List<string>();
             LinkedList<char> path = new LinkedList<char>();
             bool[] used = new bool[s.Length];
-            Permutation4_DFS(s,res,path,used);
+            Permutation4_DFS(s, res, path, used);
             return res.ToArray();
         }
         public static void Permutation4_DFS(string s, List<string> res, LinkedList<char> path, bool[] used)
         {
-            if (path.Count==s.Length)
+            if (path.Count == s.Length)
             {
                 res.Add(new String(path.ToArray()));
                 return;
@@ -926,7 +1235,7 @@ namespace ConsoleApplication9
                 }
                 path.AddLast(s[i]);
                 used[i] = true;
-                Permutation4_DFS(s,res,path,used);
+                Permutation4_DFS(s, res, path, used);
                 used[i] = false;
                 path.RemoveLast();
             }
@@ -941,7 +1250,7 @@ namespace ConsoleApplication9
             char[] arr = S.ToCharArray();
             IList<string> res = new List<string>();
             LinkedList<char> path = new LinkedList<char>();
-            LetterCasePermutation_DFS(arr,res,0);
+            LetterCasePermutation_DFS(arr, res, 0);
             return res;
         }
         public static void LetterCasePermutation_DFS(char[] arr, IList<string> res, int index)
@@ -970,13 +1279,13 @@ namespace ConsoleApplication9
         public static IList<IList<string>> Partition3(string s)
         {
             char[] arr = s.ToCharArray();
-            
+
             IList<IList<string>> res = new List<IList<string>>();
             LinkedList<string> path = new LinkedList<string>();
-            Partition3_DFS(arr,res,path,0);
+            Partition3_DFS(arr, res, path, 0);
             return res;
         }
-        public static void  Partition3_DFS(char[] arr , IList<IList<string>> res, LinkedList<string> path,int start)
+        public static void Partition3_DFS(char[] arr, IList<IList<string>> res, LinkedList<string> path, int start)
         {
             if (start == arr.Length)
             {
@@ -986,23 +1295,23 @@ namespace ConsoleApplication9
             }
             for (int i = start; i < arr.Length; i++)
             {
-                if (Partition3_IsPalind(arr,start,i))
+                if (Partition3_IsPalind(arr, start, i))
                 {
-                    path.AddLast(new String(arr,start,i-start+1));
-                    Partition3_DFS(arr,res,path,i+1);
+                    path.AddLast(new String(arr, start, i - start + 1));
+                    Partition3_DFS(arr, res, path, i + 1);
                     path.RemoveLast();
                 }
             }
         }
-        public static bool Partition3_IsPalind(char[] arr,int left,int right)
+        public static bool Partition3_IsPalind(char[] arr, int left, int right)
         {
-            while (left<right)
+            while (left < right)
             {
-                if (arr[left]!=arr[right])
+                if (arr[left] != arr[right])
                 {
                     return false;
                 }
-                left ++;
+                left++;
                 right--;
             }
             return true;
@@ -1019,7 +1328,7 @@ namespace ConsoleApplication9
             bool[] used = new bool[arr.Length];
             List<string> res = new List<string>();
             LinkedList<char> path = new LinkedList<char>();
-            Permutation2_DFS(arr, res,path,used);
+            Permutation2_DFS(arr, res, path, used);
             return res.ToArray();
         }
         public static void Permutation2_DFS(char[] arr, List<string> res, LinkedList<char> path, bool[] used)
@@ -1062,21 +1371,21 @@ namespace ConsoleApplication9
             LinkedList<char> path = new LinkedList<char>();
             IList<IList<char>> res = new List<IList<char>>();
             int[] count = new int[1];
-            NumTilePossibilities_DFS(tilesArr, 0,0,used,path, res, count);
+            NumTilePossibilities_DFS(tilesArr, 0, 0, used, path, res, count);
             return count[0];
 
         }
-        public static void NumTilePossibilities_DFS(char[] tiles,int start,int depth,bool[] used, LinkedList<char> path, IList<IList<char>> res,int[] count)
+        public static void NumTilePossibilities_DFS(char[] tiles, int start, int depth, bool[] used, LinkedList<char> path, IList<IList<char>> res, int[] count)
         {
-  
- 
-            if (depth> tiles.Length)
+
+
+            if (depth > tiles.Length)
             {
                 return;
             }
             for (int i = 0; i < tiles.Length; i++)
             {
-                if (used[i] || (i-1 >= 0 && tiles[i] == tiles[i - 1] && !used[i - 1]))
+                if (used[i] || (i - 1 >= 0 && tiles[i] == tiles[i - 1] && !used[i - 1]))
                 {
                     continue;
                 }
@@ -1085,7 +1394,7 @@ namespace ConsoleApplication9
 
                 path.AddLast(tiles[i]);
                 res.Add(new List<char>(path));
-                
+
                 used[i] = true;
                 NumTilePossibilities_DFS(tiles, i, depth + 1, used, path, res, count);
                 used[i] = false;
@@ -1151,7 +1460,7 @@ namespace ConsoleApplication9
                 PermuteUnique_DFS(nums, nums.Length, depth + 1, used, path, res);
                 // 回溯部分的代码，和 dfs 之前的代码是对称的
                 used[i] = false;
-                path.RemoveAt(path.Count-1);
+                path.RemoveAt(path.Count - 1);
             }
         }
 
@@ -1166,25 +1475,25 @@ namespace ConsoleApplication9
         {
             IList<IList<int>> res = new List<IList<int>>();
             IList<int> tmpLis = new List<int>();
-            int[] arr = new int[] { 1,2,3,4,5,6,7,8,9};
-            CombinationSum3_DFS(arr,0,k, n,0,res,tmpLis);
+            int[] arr = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            CombinationSum3_DFS(arr, 0, k, n, 0, res, tmpLis);
             return res;
         }
-        public static void CombinationSum3_DFS(int[] arr,int sum,int k, int n, int start,IList<IList<int>> res, IList<int> tmpLis)
+        public static void CombinationSum3_DFS(int[] arr, int sum, int k, int n, int start, IList<IList<int>> res, IList<int> tmpLis)
         {
-            if (tmpLis.Count>k)
+            if (tmpLis.Count > k)
             {
                 return;
             }
-            if (tmpLis.Count==k&&sum==n)
+            if (tmpLis.Count == k && sum == n)
             {
                 res.Add(new List<int>(tmpLis));
             }
-            for (int i = start; i < arr.Length&&tmpLis.Count<k&&sum<n; i++)
+            for (int i = start; i < arr.Length && tmpLis.Count < k && sum < n; i++)
             {
                 sum += arr[i];
                 tmpLis.Add(arr[i]);
-                CombinationSum3_DFS(arr,sum,k,n, i + 1,res,tmpLis);
+                CombinationSum3_DFS(arr, sum, k, n, i + 1, res, tmpLis);
                 tmpLis.Remove(arr[i]);
                 sum -= arr[i];
             }
@@ -1200,29 +1509,29 @@ namespace ConsoleApplication9
             IList<IList<int>> res = new List<IList<int>>();
             List<int> tmpLis = new List<int>();
             Array.Sort(candidates);
-            CombinationSum2_DFS(candidates,target,0,0,tmpLis,res);
+            CombinationSum2_DFS(candidates, target, 0, 0, tmpLis, res);
             return res;
         }
-        public static void CombinationSum2_DFS(int[] candidates, int target,int start,int sum, List<int> tmpLis, IList<IList<int>> res)
+        public static void CombinationSum2_DFS(int[] candidates, int target, int start, int sum, List<int> tmpLis, IList<IList<int>> res)
         {
-            if (sum==target)
+            if (sum == target)
             {
                 res.Add(new List<int>(tmpLis));
                 return;
             }
-            if (sum>target)
+            if (sum > target)
             {
                 return;
             }
-            for (int i =start; i < candidates.Length; i++)
+            for (int i = start; i < candidates.Length; i++)
             {
-                if (i>start&& candidates[i]==candidates[i-1])
+                if (i > start && candidates[i] == candidates[i - 1])
                 {
                     continue;
                 }
                 tmpLis.Add(candidates[i]);
                 sum += candidates[i];
-                CombinationSum2_DFS(candidates,target,i+1,sum,tmpLis,res);
+                CombinationSum2_DFS(candidates, target, i + 1, sum, tmpLis, res);
                 tmpLis.Remove(candidates[i]);
                 sum -= candidates[i];
             }
@@ -1238,34 +1547,34 @@ namespace ConsoleApplication9
         {
             IList<IList<int>> res = new List<IList<int>>();
             List<int> tmpLis = new List<int>();
-            Combine_DFS(n,k,1,tmpLis,res);
+            Combine_DFS(n, k, 1, tmpLis, res);
             return res;
         }
 
-        public static void Combine_DFS(int n, int k,int begin,List<int> tmpList,IList<IList<int>> res)
+        public static void Combine_DFS(int n, int k, int begin, List<int> tmpList, IList<IList<int>> res)
         {
-            if (tmpList.Count==k)
+            if (tmpList.Count == k)
             {
                 res.Add(new List<int>(tmpList));
             }
-            if (tmpList.Count>k)
+            if (tmpList.Count > k)
             {
                 return;
             }
-            for (int i = begin; i < n - (k - tmpList.Count) +1; i++)
+            for (int i = begin; i < n - (k - tmpList.Count) + 1; i++)
             {
                 tmpList.Add(i);
-                    
+
                 string tmp = "";
                 for (int g = 0; g < tmpList.Count; g++)
                 {
-                    tmp += tmpList[g] +",";
+                    tmp += tmpList[g] + ",";
                 }
-                Console.WriteLine("前："+tmp);
+                Console.WriteLine("前：" + tmp);
 
 
-                Combine_DFS( n,k,i+1,tmpList,res);
-    
+                Combine_DFS(n, k, i + 1, tmpList, res);
+
                 tmpList.Remove(i);
 
                 tmp = "";
@@ -1285,9 +1594,9 @@ namespace ConsoleApplication9
             List<int> lis = new List<int>();
             string str = "";
             int ii = 3;
-            testB(lis,str,ii);
+            testB(lis, str, ii);
         }
-        public static void testB(List<int> lis,string str,int ii)
+        public static void testB(List<int> lis, string str, int ii)
         {
             lis.Add(2);
             str = "1";
@@ -1302,34 +1611,34 @@ namespace ConsoleApplication9
 
         public static IList<IList<int>> CombinationSum(int[] candidates, int target)
         {
-            IList<IList<int>> CombinationSum_Res= new List<IList<int>>();
+            IList<IList<int>> CombinationSum_Res = new List<IList<int>>();
             Array.Sort(candidates);
             List<int> tmpList = new List<int>();
-            CombinationSum_DFS(CombinationSum_Res,candidates,tmpList,target,0);
+            CombinationSum_DFS(CombinationSum_Res, candidates, tmpList, target, 0);
             return CombinationSum_Res;
 
         }
 
-        public static void CombinationSum_DFS(IList<IList<int>> res, int[] candidates, List<int> tmpList, int target,int start )
+        public static void CombinationSum_DFS(IList<IList<int>> res, int[] candidates, List<int> tmpList, int target, int start)
         {
-            if (target<0)
+            if (target < 0)
             {
                 return;
             }
-            if (target==0)
+            if (target == 0)
             {
-                res.Add(new List<int>( tmpList));
+                res.Add(new List<int>(tmpList));
                 return;
             }
 
             for (int i = start; i < candidates.Length; i++)
             {
-                if (candidates[i]>target)
+                if (candidates[i] > target)
                 {
                     break;
                 }
                 tmpList.Add(candidates[i]);
-                CombinationSum_DFS(res,candidates,tmpList,target-candidates[i],i);
+                CombinationSum_DFS(res, candidates, tmpList, target - candidates[i], i);
                 tmpList.Remove(candidates[i]);
             }
         }
@@ -1341,19 +1650,19 @@ namespace ConsoleApplication9
         public static IList<IList<int>> Subsets_res;
         public static IList<IList<int>> Subsets(int[] nums)
         {
-            
+
             Subsets_res = new List<IList<int>>();
             List<int> temp = new List<int>();
-            Subsets_DFS(nums,0,temp);
+            Subsets_DFS(nums, 0, temp);
             return Subsets_res;
         }
-        public static void Subsets_DFS(int[] nums,int start,List<int> temp)
+        public static void Subsets_DFS(int[] nums, int start, List<int> temp)
         {
-            Subsets_res.Add(new List<int>(temp) );
+            Subsets_res.Add(new List<int>(temp));
             for (int i = start; i < nums.Length; i++)
             {
                 temp.Add(nums[i]);
-                Subsets_DFS(nums,i+1,temp);
+                Subsets_DFS(nums, i + 1, temp);
                 temp.Remove(nums[i]);
             }
         }
@@ -1366,12 +1675,12 @@ namespace ConsoleApplication9
             int distance = nums[0];
             for (int i = 1; i < nums.Length; i++)
             {
-                if (i<=distance)
+                if (i <= distance)
                 {
-                    distance = Math.Max(distance,nums[i]+i);
+                    distance = Math.Max(distance, nums[i] + i);
                 }
             }
-            return distance+1 >= nums.Length;
+            return distance + 1 >= nums.Length;
         }
         /// <summary>
         ///64. 最小路径和  https://leetcode-cn.com/problems/minimum-path-sum/
@@ -2821,7 +3130,7 @@ namespace ConsoleApplication9
         }
         public static int sub_IsSumEqual(string Word)
         {
-            int final = 0, curr = 0;
+            int final = 0;
             for (int i = 0; i < Word.Length; i++)
             {
                 final *= 10;
@@ -14076,6 +14385,7 @@ namespace ConsoleApplication9
             }
             return matrix;
         }
+
         /// <summary>
         /// 根据二维矩阵字符串生成二维矩阵
         /// </summary>
@@ -17955,10 +18265,7 @@ namespace ConsoleApplication9
             }
             return treeNodes[0];
         }
-        public static int PathSum(TreeNode root, int sum)
-        {
-            return 0;
-        }
+
         public static bool IsBalanced(TreeNode root)
         {
             if (root == null) return true;
