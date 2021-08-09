@@ -907,12 +907,243 @@ namespace ConsoleApplication9
             //var result = Exist(GetMatrixChar("[[A,B,C,E],[S,F,C,S],[A,D,E,E]]"),"SEE");
             //var result = RestoreIpAddresses("25525511135");
             //var result = FindTargetSumWays(new int[] { 1000},1000);
-            var result = Exist2(GetMatrixChar("[['A','B','C','E'],['S','F','C','S'],['A','D','E','E']]"), "ABCCED");
+            //var result = Exist2(GetMatrixChar("[['A','B','C','E'],['S','F','C','S'],['A','D','E','E']]"), "ABCCED");
+            //var result = CombinationSum4(new int[] { 10, 1, 2, 7, 6, 1, 5 },8);
+            //var result = Subsets3(new int[] { 1, 2, 3 });
+            //var result = Permute2(new int[] { 1, 2, 3 });
+            //var result = CombinationSum5(new int[] { 2, 3, 6, 7 },7);
+            //var result = AllPathsSourceTarget2(GetMatrix("[[1,2],[3],[3],[]]"));
+            //var result = PermuteUnique2(new int[] { 1, 1, 2 });
+            var result = Combine2(4,2);
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
+        /// <summary>
+        ///剑指 Offer II 080. 含有 k 个元素的组合  https://leetcode-cn.com/problems/uUsW3B/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static  IList<IList<int>> Combine2(int n, int k)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            IList<int> path = new List<int>();
+            bool[] used = new bool[n+1];
 
+            Combine2_DFS(n,k,res,path, used,1);
+
+            return res;
+        }
+        public static void Combine2_DFS(int n, int k, IList<IList<int>> res, IList<int> path, bool[] used,int start)
+        {
+            if (path.Count==k)
+            {
+                res.Add(new List<int>(path));
+                return;
+            }
+            for (int i = start; i < n+1; i++)
+            {
+                if (used[i])
+                    continue;
+
+                used[i] = true;
+                path.Add(i);
+                Combine2_DFS(n,k,res,path,used,i+1);
+                path.Remove(i);
+                used[i] = false;
+            }
+        }
+
+
+        /// <summary>
+        /// 剑指 Offer II 084. 含有重复元素集合的全排列  https://leetcode-cn.com/problems/7p8L0Z/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> PermuteUnique2(int[] nums)
+        {
+            Array.Sort(nums);
+            IList<IList<int>> res = new List<IList<int>>();
+            LinkedList<int> path = new LinkedList<int>();
+            bool[] used = new bool[nums.Length];
+            PermuteUnique2_DFS(nums,res,path,used);
+            return res;
+        }
+        public static void PermuteUnique2_DFS(int[] nums, IList<IList<int>> res, LinkedList<int> path, bool[] used)
+        {
+            if (path.Count==nums.Length)
+            {
+                res.Add(new List<int>(path));
+                return;
+            }
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (used[i]||(i-1>-1&&nums[i]== nums[i-1]&&!used[i-1]))
+                    continue;
+
+                used[i] = true;
+                path.AddLast(nums[i]);
+                PermuteUnique2_DFS(nums, res, path, used);
+                path.RemoveLast();
+                used[i] = false;
+            }
+        }
+        /// <summary>
+        ///剑指 Offer II 110. 所有路径  https://leetcode-cn.com/problems/bP4bmD/
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> AllPathsSourceTarget2(int[][] graph)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            LinkedList<int> path = new LinkedList<int>();
+            path.AddLast(0);
+           AllPathsSourceTarget_DFS(graph, res,0, path);
+            return res;
+        }
+        public static void AllPathsSourceTarget_DFS(int[][] graph, IList<IList<int>> res,int n, LinkedList<int> path)
+        {
+            if (n==graph.Length-1)
+            {
+                res.Add(new List<int>(path));
+                return;
+            }
+            for (int i = 0; i < graph[n].Length; i++)
+            {
+                int m = graph[n][i];
+                path.AddLast(m);
+                AllPathsSourceTarget_DFS(graph,res, m, path);
+                path.RemoveLast();
+            }
+
+        }
+        /// <summary>
+        ///剑指 Offer II 081. 允许重复选择元素的组合  https://leetcode-cn.com/problems/Ygoe9J/
+        /// </summary>
+        /// <param name="candidates"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> CombinationSum5(int[] candidates, int target)
+        {
+            Array.Sort(candidates);
+            IList<IList<int>> res = new List<IList<int>>();
+            LinkedList<int> path = new LinkedList<int>();
+            CombinationSum5_DFS(candidates,target,res,path,0);
+            return res;
+        }
+        public static void CombinationSum5_DFS(int[] candidates, int target, IList<IList<int>> res, LinkedList<int> path,int start)
+        {
+            if (target <0)
+            {
+                return;
+            }
+            if (target == 0)
+            {
+                res.Add(new List<int>(path));
+                return;
+            }
+            for (int i = start; i < candidates.Length; i++)
+            {
+                if (candidates[i]>target)
+                    return;
+
+                path.AddLast(candidates[i]);
+                CombinationSum5_DFS(candidates,target-candidates[i],res,path,i);
+                path.RemoveLast();
+            }
+        }
+
+        /// <summary>
+        /// 剑指 Offer II 083. 没有重复元素集合的全排列 https://leetcode-cn.com/problems/VvJkup/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static  IList<IList<int>> Permute2(int[] nums)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            IList<int> path = new List<int>();
+            bool[] used = new bool[nums.Length];
+            Permute2_DFS(nums,res,path,used);
+            return res;
+        }
+        public static void Permute2_DFS(int[] nums, IList<IList<int>> res, IList<int> path, bool[] used)
+        {
+            if (path.Count==nums.Length)
+            {
+                res.Add(new List<int>(path));
+                return;
+            }
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (used[i])
+                    continue;
+
+                used[i] = true;
+                path.Add(nums[i]);
+                Permute2_DFS(nums,res,path,used);
+                path.Remove(nums[i]);
+                used[i] = false;
+            }
+        }
+        /// <summary>
+        ///剑指 Offer II 079. 所有子集  https://leetcode-cn.com/problems/TVdhkn/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> Subsets3(int[] nums)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            IList<int> path = new List<int>();
+            Subsets3_DFS(nums,res,path,0);
+            return res;
+        }
+        public static void Subsets3_DFS(int[] nums, IList<IList<int>> res, IList<int> path,int start)
+        {
+            res.Add(new List<int>(path));
+            for (int i = start; i < nums.Length; i++)
+            {
+                path.Add(nums[i]);
+                Subsets3_DFS(nums, res, path, i+1);
+                path.Remove(nums[i]);
+            }
+        }
+
+        /// <summary>
+        ///剑指 Offer II 082. 含有重复元素集合的组合 https://leetcode-cn.com/problems/4sjJUc/
+        /// </summary>
+        /// <param name="candidates"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> CombinationSum4(int[] candidates, int target)
+        {
+            Array.Sort(candidates);
+            IList<IList<int>> res = new List<IList<int>>();
+            LinkedList<int> path = new LinkedList<int>();
+            CombinationSum4_DFS(candidates,target,res,path,0,0);
+            return res;
+        }
+        public static void CombinationSum4_DFS(int[] candidates, int target, IList<IList<int>> res, LinkedList<int> path,int start,int currSum)
+        {
+            if (currSum > target)
+                return;
+            if (currSum==target)
+            {
+                res.Add(new List<int>(path));
+                return;
+            }
+            for (int i = start; i < candidates.Length; i++)
+            {
+                if (i > start && candidates[i] == candidates[i - 1] )
+                    continue;
+
+                currSum += candidates[i];
+                path.AddLast(candidates[i]);
+                CombinationSum4_DFS(candidates, target, res, path, i+1, currSum);
+                path.RemoveLast();
+                currSum -= candidates[i];
+            }
+        }
         /// <summary>
         /// 剑指 Offer 12. 矩阵中的路径 https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/
         /// </summary>
@@ -976,7 +1207,6 @@ namespace ConsoleApplication9
         public static int FindTargetSumWays(int[] nums, int target)
         {
             int[] res = new int[1];
-            bool[] used = new bool[nums.Length];
             FindTargetSumWays_DFS(nums, target, 0, res, 0);
             return res[0];
         }
@@ -1616,7 +1846,6 @@ namespace ConsoleApplication9
             List<int> tmpList = new List<int>();
             CombinationSum_DFS(CombinationSum_Res, candidates, tmpList, target, 0);
             return CombinationSum_Res;
-
         }
 
         public static void CombinationSum_DFS(IList<IList<int>> res, int[] candidates, List<int> tmpList, int target, int start)
