@@ -39,6 +39,35 @@ namespace ConsoleApplication9
         static void Main(string[] args)
         {
             #region old
+            //var result = Combine(4,2);
+            //var result = CombinationSum2(new int[] { 2, 5, 2, 1, 2 },5);
+            //var result = CombinationSum3(3,7);
+            //var result = PermuteUnique(new int[] { 2,2,1,1 });;
+            //var rewsult = NumTilePossibilities("AAABBC");
+            //var result = Permutation2("qqe");
+            //var result = Partition3("aab");
+            //var result = LetterCasePermutation("ab");
+            //var result = Permutation4("abc");
+            //var result = SubsetsWithDup(new int[] { 0 });
+            //var result = PathSum(ConvertTreeFromArray(new int?[] { 5, 4, 8, 11, null, 13, 4, 7, 2, null, null, 5, 1 }),22);
+            //var result = Subsets2(new int[] {1,2,3 });
+
+            //var result = Exist(GetMatrixChar("[[A,B,C,E],[S,F,C,S],[A,D,E,E]]"),"SEE");
+            //var result = RestoreIpAddresses("25525511135");
+            //var result = FindTargetSumWays(new int[] { 1000},1000);
+            //var result = Exist2(GetMatrixChar("[['A','B','C','E'],['S','F','C','S'],['A','D','E','E']]"), "ABCCED");
+            //var result = CombinationSum4(new int[] { 10, 1, 2, 7, 6, 1, 5 },8);
+            //var result = Subsets3(new int[] { 1, 2, 3 });
+            //var result = Permute2(new int[] { 1, 2, 3 });
+            //var result = CombinationSum5(new int[] { 2, 3, 6, 7 },7);
+            //var result = AllPathsSourceTarget2(GetMatrix("[[1,2],[3],[3],[]]"));
+            //var result = PermuteUnique2(new int[] { 1, 1, 2 });
+            //var result = Combine2(4,2);
+            //var result = GenerateParenthesis2(3);
+            //var result = Partition4("aab");
+            //var result = RestoreIpAddresses2("25525511135");
+            //var result = FindTargetSumWays2(new int[] { 1,1,1,1,1},3);
+            //var result = PathSum2(ConvertTreeFromArray(new int?[] { 1, 2, 2 }),3);
             //var result = NumWays(5, GetMatrix("[[0,2],[2,1],[3,4],[2,3],[1,4],[2,0],[0,4]]"), 3);
             //var result = NumMovesStones(1,3,5);
             //TripleInOne ti = new TripleInOne(1);
@@ -890,35 +919,297 @@ namespace ConsoleApplication9
 
             #endregion
 
+            //var result = IsSameTree2(ConvertTreeFromArray(new int?[] { 1, 2,3 }),ConvertTreeFromArray( new int?[] { 1,  2,3 }));
+            //var result = CheckSubTree(ConvertTreeFromArray(new int?[] { 1,2,3}), ConvertTreeFromArray(new int?[] {2 }));
+            //var result = IsValidBST(ConvertTreeFromArray(new int?[] { 5, 4, 6, null, null, 3, 7 }));
+            //var result = ConvertBST2(ConvertTreeFromArray(new int?[] { 4, 1, 6, 0, 2, 5, 7, null, null, null, 3, null, null, null, 8 }));
+            var result = KthSmallest2(ConvertTreeFromArray(new int?[] { 3, 1, 4, null, 2 }),1);
 
-            //var result = Combine(4,2);
-            //var result = CombinationSum2(new int[] { 2, 5, 2, 1, 2 },5);
-            //var result = CombinationSum3(3,7);
-            //var result = PermuteUnique(new int[] { 2,2,1,1 });;
-            //var rewsult = NumTilePossibilities("AAABBC");
-            //var result = Permutation2("qqe");
-            //var result = Partition3("aab");
-            //var result = LetterCasePermutation("ab");
-            //var result = Permutation4("abc");
-            //var result = SubsetsWithDup(new int[] { 0 });
-            //var result = PathSum(ConvertTreeFromArray(new int?[] { 5, 4, 8, 11, null, 13, 4, 7, 2, null, null, 5, 1 }),22);
-            //var result = Subsets2(new int[] {1,2,3 });
-
-            //var result = Exist(GetMatrixChar("[[A,B,C,E],[S,F,C,S],[A,D,E,E]]"),"SEE");
-            //var result = RestoreIpAddresses("25525511135");
-            //var result = FindTargetSumWays(new int[] { 1000},1000);
-            //var result = Exist2(GetMatrixChar("[['A','B','C','E'],['S','F','C','S'],['A','D','E','E']]"), "ABCCED");
-            //var result = CombinationSum4(new int[] { 10, 1, 2, 7, 6, 1, 5 },8);
-            //var result = Subsets3(new int[] { 1, 2, 3 });
-            //var result = Permute2(new int[] { 1, 2, 3 });
-            //var result = CombinationSum5(new int[] { 2, 3, 6, 7 },7);
-            //var result = AllPathsSourceTarget2(GetMatrix("[[1,2],[3],[3],[]]"));
-            //var result = PermuteUnique2(new int[] { 1, 1, 2 });
-            var result = Combine2(4,2);
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
+        /// <summary>
+        /// 230. 二叉搜索树中第K小的元素 https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static int KthSmallest2(TreeNode root, int k)
+        {
+            int[] res = new int[] { 0};
+            KthSmallest2_DFS(root,res,new int[] { 0},k);
+            return res[0];
+        }
+
+        public static void KthSmallest2_DFS(TreeNode root,    int[] res, int[] count,int k)
+        {
+            if (root == null)
+                return;
+            KthSmallest2_DFS(root.left, res, count,k);
+            count[0]++;
+            if (count[0]==k)
+            {
+                res[0] = root.val;
+                return;
+            }
+            KthSmallest2_DFS(root.right, res, count,k);
+        }
+
+        /// <summary>
+        ///剑指 Offer II 054. 所有大于等于节点的值之和  https://leetcode-cn.com/problems/w6cpku/
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static TreeNode ConvertBST2(TreeNode root)
+        {
+            int[] sum = new int[1];
+            ConvertBST2_DFS(root,sum);
+            return root;
+        }
+
+        public static void ConvertBST2_DFS(TreeNode root, int[] sum)
+        {
+            if (root == null)
+                return ;
+            ConvertBST2_DFS(root.right,sum);
+            root.val+= sum[0];
+            sum[0] = root.val;
+            ConvertBST2_DFS(root.left,sum);
+
+        }
+
+        /// <summary>
+        ///98. 验证二叉搜索树  https://leetcode-cn.com/problems/validate-binary-search-tree/
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static int IsValidBST_Pre = int.MinValue;
+        public static bool IsValidBST(TreeNode root)
+        {
+            if (root == null)
+                return true;
+
+            if (!IsValidBST(root.left))
+                return false;
+
+            if (root.val <= IsValidBST_Pre)
+                return false;
+
+            IsValidBST_Pre = root.val;
+
+            return IsValidBST(root.right);
+        }
+
+        /// <summary>
+        /// 面试题 04.10. 检查子树  https://leetcode-cn.com/problems/check-subtree-lcci/
+        /// </summary>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
+        /// <returns></returns>
+        public static  bool CheckSubTree(TreeNode t1, TreeNode t2)
+        {
+            if (t1 == null)
+                return t2 == null;
+            return IsSametree2(t1,t2)|| CheckSubTree(t1.left, t2)|| CheckSubTree(t1.right, t2);
+        }
+        public static bool IsSametree2(TreeNode s, TreeNode t)
+        {
+            if (s == null && t == null) return true;
+            if (s == null || t == null) return false;
+            if (s.val != t.val) return false;
+
+            return IsSametree2(s.left, t.left) && IsSametree2(s.right, t.right);
+        }
+        /// <summary>
+        /// 剑指 Offer 34. 二叉树中和为某一值的路径 https://leetcode-cn.com/problems/er-cha-shu-zhong-he-wei-mou-yi-zhi-de-lu-jing-lcof/
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static IList<IList<int>> PathSum2(TreeNode root, int target)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            IList<int> path = new List<int>();
+            PathSum2_DFS(root,target,res,path,0);
+            return res;
+
+        }
+        public static void PathSum2_DFS(TreeNode root, int target, IList<IList<int>> res, IList<int> path,int currSum)
+        {
+            if (root == null)
+                return;
+
+            currSum += root.val;
+            path.Add(root.val);
+            if (currSum == target && root.left == null && root.right == null)
+            {
+                res.Add(new List<int>(path));
+                return;
+            }
+            PathSum2_DFS(root.left, target, res, path, currSum);
+            PathSum2_DFS(root.right, target, res, path, currSum);
+            path.RemoveAt(path.Count-1);
+
+            currSum -= root.val;
+        }
+        /// <summary>
+        /// 剑指 Offer II 102. 加减的目标值 https://leetcode-cn.com/problems/YaVDxD/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static  int FindTargetSumWays2(int[] nums, int target)
+        {
+            int[] res = new int[1];
+            FindTargetSumWays2_DFS(nums,target,res,0,0);
+            return res[0];
+        }
+        public static void FindTargetSumWays2_DFS(int[] nums, int target,int[] res,int currSum,int start)
+        {
+          
+            if (start==nums.Length&& currSum==target)
+            {
+                res[0]++;
+                return;
+            }
+            if (start > nums.Length-1)
+                return;
+            currSum += nums[start];
+            FindTargetSumWays2_DFS(nums,target,res,currSum,start+1);
+            currSum -= nums[start];
+
+            currSum -= nums[start];
+            FindTargetSumWays2_DFS(nums, target, res, currSum, start + 1);
+            currSum += nums[start];
+        }
+
+        /// <summary>
+        ///剑指 Offer II 087. 复原 IP   https://leetcode-cn.com/problems/0on3uN/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static IList<string> RestoreIpAddresses2(string s)
+        {
+            IList<string> res = new List<string>();
+            if (s.Length < 4 || s.Length > 12)
+                return res;
+
+            IList<string> path = new List<string>();
+            RestoreIpAddresses2_DFS(s,res,path,0);
+            return res;
+        }
+        public static void RestoreIpAddresses2_DFS(string s, IList<string> res, IList<string> path,int start)
+        {
+            if (path.Count==4)
+            {
+                if (start==s.Length)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < 3; i++)
+                    {
+                        sb.Append(path[i] + ".");
+                    }
+                    sb.Append(path[3]);
+                    res.Add(sb.ToString());
+                }
+                return;
+            }
+
+            for (int i = 1; i < 4; i++)
+            {
+                if (start+i-1>=s.Length)
+                {
+                    return;
+                }
+                if (i!=1&&s[start]=='0')
+                {
+                    return;
+                }
+
+                string currStr = s.Substring(start,i);
+                if (currStr.Length==3&&int.Parse(currStr)>255)
+                {
+                    return;
+                }
+                path.Add(currStr);
+                RestoreIpAddresses2_DFS(s,res,path,start+i);
+                path.RemoveAt(path.Count-1);
+            }
+        }
+        /// <summary>
+        ///剑指 Offer II 086. 分割回文子字符串  https://leetcode-cn.com/problems/M99OJA/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string[][] Partition4(string s)
+        {
+            IList<IList<string>> res = new List<IList<string>>();
+            LinkedList<string> path = new LinkedList<string>();
+            Partition4_DFS(s,res,path,0);
+
+            string[][] final = new string[res.Count][];
+            for (int i = 0; i < res.Count; i++)
+            {
+                final[i] = res[i].ToArray();
+            }
+            return final;
+
+        }
+        public static void Partition4_DFS(string s, IList<IList<string>> res, LinkedList<string> path,int start)
+        {
+            if (start==s.Length)
+            {
+                res.Add(new List<string>(path));
+                return;
+            }
+            for (int i = start; i < s.Length; i++)
+            {
+                if (Partition4_IsPalind(s,start,i))
+                {
+                    path.AddLast(s.Substring(start,i-start+1));
+                    Partition4_DFS(s,res,path,i+1);
+                    path.RemoveLast();
+                }
+            }
+        }
+        public static bool Partition4_IsPalind(string s,int left,int right)
+        {
+            while (left<right)
+            {
+                if (s[left]!=s[right])
+                {
+                    return false;
+                }
+                left++;
+                right--;
+            }
+            return true;
+        }
+        /// <summary>
+        /// 剑指 Offer II 085. 生成匹配的括号 https://leetcode-cn.com/problems/IDBivT/
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static IList<string> GenerateParenthesis2(int n)
+        {
+            IList<string> res = new List<string>();
+            GenerateParenthesis2_DFS(res,"",n,n);
+            return res;
+        }
+        public static void GenerateParenthesis2_DFS( IList<string> res, string path,int leftRemain,int rightRemain)
+        {
+            if (leftRemain==0&&rightRemain==0)
+            {
+                res.Add(new String(path.ToArray()));
+                return;
+            }
+            if (leftRemain>0)
+                GenerateParenthesis2_DFS( res, path+"(", leftRemain-1, rightRemain);
+            if (rightRemain > leftRemain)
+                GenerateParenthesis2_DFS( res, path+")", leftRemain, rightRemain-1);
+        }
+
         /// <summary>
         ///剑指 Offer II 080. 含有 k 个元素的组合  https://leetcode-cn.com/problems/uUsW3B/
         /// </summary>
@@ -16831,6 +17122,12 @@ namespace ConsoleApplication9
 
             return IsSubtree(s.right, t) || IsSubtree(s.left, t) || IsSametree(s, t);
         }
+        /// <summary>
+        ///100. 相同的树  https://leetcode-cn.com/problems/same-tree/
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static bool IsSametree(TreeNode s, TreeNode t)
         {
             if (s == null && t == null) return true;
