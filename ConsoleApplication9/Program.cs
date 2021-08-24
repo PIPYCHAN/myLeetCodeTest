@@ -923,12 +923,174 @@ namespace ConsoleApplication9
             //var result = CheckSubTree(ConvertTreeFromArray(new int?[] { 1,2,3}), ConvertTreeFromArray(new int?[] {2 }));
             //var result = IsValidBST(ConvertTreeFromArray(new int?[] { 5, 4, 6, null, null, 3, 7 }));
             //var result = ConvertBST2(ConvertTreeFromArray(new int?[] { 4, 1, 6, 0, 2, 5, 7, null, null, null, 3, null, null, null, 8 }));
-            var result = KthSmallest2(ConvertTreeFromArray(new int?[] { 3, 1, 4, null, 2 }),1);
-
+            //var result = KthSmallest2(ConvertTreeFromArray(new int?[] { 3, 1, 4, null, 2 }),1);
+            //var result = GetConcatenation(new int[] { 1,2,1});
+            //var result = SortedListToBST(GenerateListNodeFromArray(new int[] { -10, -3, 0, 5, 9 }));
+            //var result = FindTarget2(ConvertTreeFromArray(new int?[] { 8, 6, 10, 5, 7, 9, 11 }),12);
+            //var result = IncreasingBST2(ConvertTreeFromArray(new int?[] { 5,1,7 }));
+            var result = GetAllElements(ConvertTreeFromArray(new int?[] { 2, 1, 4 }),ConvertTreeFromArray(new int?[] { 1, 0, 3 }));
 
             Console.WriteLine("end");
             Console.ReadKey();
         }
+
+        /// <summary>
+        ///1305. 两棵二叉搜索树中的所有元素  https://leetcode-cn.com/problems/all-elements-in-two-binary-search-trees/
+        /// </summary>
+        /// <param name="root1"></param>
+        /// <param name="root2"></param>
+        /// <returns></returns>
+        public static  IList<int> GetAllElements(TreeNode root1, TreeNode root2)
+        {
+            List<int> list1 = new List<int>();
+            List<int> list2 = new List<int>();
+            GetAllElements_InOrder(root1,list1);
+            GetAllElements_InOrder(root2, list2);
+            //list.Sort();//自带排序函数的时间复杂的logN
+
+            //对两个list归并排序
+            List<int> res = new List<int>();
+            int m = list1.Count, n = list2.Count,i=0,j=0;
+            while (i < m&&j<n )
+            {
+                int num1 = list1[i], num2 = list2[j];
+                if (num1>num2)
+                {
+                    res.Add(num2);
+                    j++;
+                }
+                else
+                {
+                    res.Add(num1);
+                    i++;
+                }
+            }
+            while (i<m)
+            {
+                res.Add(list1[i]);
+                i++;
+            }
+            while (j<n)
+            {
+                res.Add(list2[j]);
+                j++;
+            }
+
+
+            return res;
+        }
+        public static void GetAllElements_InOrder(TreeNode root, List<int> list)
+        {
+            if (root == null)
+                return;
+            GetAllElements_InOrder(root.left,list);
+            list.Add(root.val);
+            GetAllElements_InOrder(root.right, list);
+        }
+        /// <summary>
+        ///剑指 Offer II 052. 展平二叉搜索树  https://leetcode-cn.com/problems/NYBBNL/
+        /// </summary>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        public static TreeNode Increasing2Root;
+        public static TreeNode Increasing2Curr;
+        public static TreeNode IncreasingBST2(TreeNode root)
+        {
+            Increasing2Root = new TreeNode(0);
+            Increasing2Root.right = new TreeNode(0);
+            Increasing2Curr = Increasing2Root.right;
+            IncreasingBST2_DFS(root);
+            return Increasing2Root.right.right;
+        }
+        public static void IncreasingBST2_DFS(TreeNode root)
+        {
+            if (root == null)
+                return;
+            IncreasingBST2_DFS(root.left);
+
+            TreeNode cur = new TreeNode(root.val);
+            Increasing2Curr.right = cur;
+            Increasing2Curr = Increasing2Curr.right;
+
+            IncreasingBST2_DFS(root.right);
+        }
+        /// <summary>
+        /// 剑指 Offer II 056. 二叉搜索树中两个节点之和
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public static  bool FindTarget2(TreeNode root, int k)
+        {
+            if (root == null)
+                return false;
+
+            LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+            HashSet<int> hs =new HashSet<int>();
+            queue.AddLast(root);
+            while (queue.Count>0)
+            {
+                TreeNode curr = queue.First();
+                queue.RemoveFirst();
+                if (hs.Contains(k - curr.val))
+                    return true;
+
+                hs.Add(curr.val);
+                if (curr.left!=null)
+                    queue.AddLast(curr.left);
+                if (curr.right!=null)
+                    queue.AddLast(curr.right);
+            }
+            return false;
+        }
+        /// <summary>
+        /// 109. 有序链表转换二叉搜索树 https://leetcode-cn.com/problems/convert-sorted-list-to-binary-search-tree/
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static TreeNode SortedListToBST(ListNode head)
+        {
+            if (head==null)
+                return null;
+
+            List<int> lis = new List<int>();
+            while (head!=null)
+            {
+                lis.Add(head.val);
+                head = head.next;
+            }
+            return BuildTree(0,lis.Count-1,lis);
+        }
+
+        public static TreeNode BuildTree(int left, int right, List<int> lis)
+        {
+            if (left > right)
+                return null;
+            int middle = left + (right - left+1) / 2;
+            TreeNode head = new TreeNode(lis[middle]);
+            head.left = BuildTree(left,middle-1,lis);
+            head.right = BuildTree(middle+1, right, lis);
+            return head;
+
+        }
+        /// <summary>
+        ///1929. 数组串联  https://leetcode-cn.com/problems/concatenation-of-array/
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <returns></returns>
+        public static int[] GetConcatenation(int[] nums)
+        {
+            int n = nums.Length;
+            int[] res = new int[n * 2];
+            for (int i = 0; i < n; i++)
+            {
+                res[i] = nums[i];
+                res[i+n] = nums[i];
+            }
+            return res;
+        }
+
+
         /// <summary>
         /// 230. 二叉搜索树中第K小的元素 https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/
         /// </summary>
